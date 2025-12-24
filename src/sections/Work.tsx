@@ -6,14 +6,21 @@ import { ProjectCard } from '../components/ProjectCard';
 import { DURATION, EASE_OUT, fadeInUp, staggerContainer, revealLine } from '../utils/motion';
 
 export const Work = () => {
-  const [filter, setFilter] = useState<'All' | 'AI' | 'Web' | 'Infra'>('All');
+  const [filter, setFilter] = useState<'All' | 'AI' | 'Web' | 'Sys' | 'Sec' | 'Gfx'>('All');
   
   const featured = PROJECTS.filter(p => p.featured);
   const others = PROJECTS.filter(p => !p.featured);
   
   const displayedOthers = filter === 'All' 
     ? others 
-    : others.filter(p => p.category === filter || (filter === 'Infra' && p.category === 'System'));
+    : others.filter(p => {
+        if (filter === 'AI') return p.category === 'AI';
+        if (filter === 'Web') return p.category === 'Web';
+        if (filter === 'Sec') return p.category === 'Security';
+        if (filter === 'Gfx') return p.category === 'Graphics & Simulation';
+        if (filter === 'Sys') return ['System', 'Infra', 'Software Engineering', 'DevOps & Utilities'].includes(p.category);
+        return false;
+    });
 
   return (
     <section id="work" className="py-32 px-6 max-w-[1200px] mx-auto border-x border-line/30">
@@ -49,7 +56,7 @@ export const Work = () => {
           <motion.h3 variants={fadeInUp} className="text-lg font-bold font-display text-text-strong">ARCHIVE</motion.h3>
           <motion.div variants={fadeInUp} className="flex items-center gap-4 overflow-x-auto pb-2 md:pb-0">
              <Filter size={14} className="text-text-muted" />
-            {['All', 'AI', 'Web', 'Infra'].map(f => (
+            {['All', 'AI', 'Web', 'Sys', 'Sec', 'Gfx'].map(f => (
               <button 
                 key={f}
                 onClick={() => setFilter(f as any)}

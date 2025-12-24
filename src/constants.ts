@@ -100,10 +100,10 @@ export const EDUCATION: Education[] = [
     id: "edu-2",
     degree: "Maritime Professional Certifications",
     school: "Royal Navy / Maritime Training Center",
-    year: "2021 - 2022",
+    year: "2020 - 2023",
     focus: "Technical specialization in naval operations and system safety.",
     certifications: [
-      "Brevet Élémentaire en Navigation (B.E.N.)",
+      "Brevet Élémentaire en Navigation (B.E)",
       "Certificat Maritime Militaire (Military Maritime Qualification)",
       "Certificat de Spécialité Maritime (Specialized Technical Training)"
     ]
