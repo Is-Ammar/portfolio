@@ -16,7 +16,7 @@ export const Hero = () => {
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
   return (
-    <section ref={ref} className="relative min-h-screen pt-32 pb-20 px-6 flex flex-col justify-center max-w-[1200px] mx-auto border-x border-line/30 grid-bg overflow-hidden">
+    <section ref={ref} className="relative min-h-screen pt-32 pb-20 px-6 flex flex-col justify-center max-w-[1200px] mx-auto border-x border-line/30 overflow-hidden">
       {/* Hero Signal Sweep */}
       <motion.div 
         variants={signalSweep}
