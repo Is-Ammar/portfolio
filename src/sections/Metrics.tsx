@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { motion, useInView, useSpring, useTransform } from 'framer-motion';
+import React, { useEffect, useRef } from 'react';
+import { motion, useInView, useSpring, useTransform, useReducedMotion } from 'framer-motion';
 import { METRICS } from '../constants';
 import { DURATION, EASE_OUT, staggerContainer, fadeInUp } from '../utils/motion';
 
@@ -9,12 +9,13 @@ const Counter = ({ value, suffix }: { value: string, suffix?: string }) => {
   const prefix = match ? match[1] : "";
   const numericValue = match ? parseFloat(match[2]) : parseFloat(value);
   const isNumeric = !isNaN(numericValue);
+  const reduceMotion = useReducedMotion();
   
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-20%" });
   
   const springValue = useSpring(0, {
-    duration: 1.5,
+    duration: reduceMotion ? 0 : 1.5,
     bounce: 0
   });
 
@@ -56,7 +57,7 @@ export const Metrics = () => {
             {/* Hover scanline effect */}
             <div className="absolute top-0 left-0 w-full h-1 bg-accent/20 -translate-y-full group-hover:translate-y-[900%] transition-transform duration-1000"></div>
             
-            <div className="font-mono text-[10px] uppercase tracking-widest text-text-muted group-hover:text-accent transition-colors">
+            <div className="font-mono text-xs uppercase tracking-wider text-text-muted group-hover:text-accent transition-colors">
               0{i + 1} // {m.label}
             </div>
             <div className="text-4xl md:text-5xl font-display font-bold text-text-strong mt-2">

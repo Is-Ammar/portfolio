@@ -17,7 +17,7 @@ export const About = () => {
          className="relative z-10"
       >
         <div className="flex items-center gap-4 mb-16">
-            <motion.span variants={fadeInUp} className="font-mono text-accent text-sm uppercase tracking-[0.3em]">01</motion.span>
+            <motion.span variants={fadeInUp} className="font-mono text-accent text-sm uppercase tracking-wider">01</motion.span>
             <motion.h2 variants={fadeInUp} className="text-2xl md:text-3xl font-display font-bold tracking-tight text-text-strong">OPERATIONAL PROFILE</motion.h2>
             <motion.div variants={revealLine} className="h-px bg-line flex-grow"></motion.div>
         </div>
@@ -33,14 +33,14 @@ export const About = () => {
             
             <div className="pt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="rounded-xl border border-line/70 bg-bg-elev-1/60 px-5 py-4">
-                <h4 className="font-mono text-xs text-text-muted uppercase tracking-widest mb-2">Primary Focus</h4>
+                <h4 className="font-mono text-xs text-text-muted uppercase tracking-wider mb-2">Primary Focus</h4>
                 <ul className="space-y-1 text-sm text-text-strong">
                   <li>AI Systems Engineering</li>
                   <li>High-Performance Web</li>
                 </ul>
               </div>
               <div className="rounded-xl border border-line/70 bg-bg-elev-1/60 px-5 py-4">
-                <h4 className="font-mono text-xs text-text-muted uppercase tracking-widest mb-2">Location</h4>
+                <h4 className="font-mono text-xs text-text-muted uppercase tracking-wider mb-2">Location</h4>
                 <div className="text-sm text-text-strong">Based in Morocco</div>
                 <div className="text-sm text-text-muted">Available Remote</div>
               </div>
@@ -56,7 +56,7 @@ export const About = () => {
                         <div className="w-1 h-1 bg-text-muted rounded-full"></div>
                     </div>
                 </div>
-                <h3 className="font-mono uppercase text-sm font-bold text-accent mb-6 tracking-[0.2em]">Education Log</h3>
+                <h3 className="font-mono uppercase text-sm font-bold text-accent mb-6 tracking-wider">Education Log</h3>
                 <div className="space-y-8">
                     {EDUCATION.map(edu => (
                     <div key={edu.id} className="relative pl-6 border-l border-line-strong/70">
@@ -72,7 +72,7 @@ export const About = () => {
                           </p>
                         )}
                         {edu.certifications && (
-                          <ul className="list-disc list-inside text-[10px] text-text-muted/70 space-y-0.5">
+                          <ul className="list-disc list-inside text-xs text-text-muted/70 space-y-0.5">
                             {edu.certifications.map((cert, idx) => (
                               <li key={idx}>{cert}</li>
                             ))}

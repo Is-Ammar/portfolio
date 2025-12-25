@@ -36,18 +36,30 @@ export const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
 
       <div className="p-6 flex-1 flex flex-col">
         <div className="flex justify-between items-start mb-6">
-          <div className="inline-flex items-center gap-2 px-2 py-1 bg-bg-elev-1 border border-line/70 rounded-full text-[10px] font-mono uppercase tracking-widest text-text-muted">
+          <div className="inline-flex items-center gap-2 px-2 py-1 bg-bg-elev-1 border border-line/70 rounded-full text-xs font-mono uppercase tracking-wider text-text-muted">
             {getIcon(project.category)}
             {project.category}_OP
           </div>
           <div className="flex gap-3 z-10">
              {project.github && (
-              <a href={project.github} target="_blank" rel="noreferrer" className="text-text-muted hover:text-accent transition-colors">
+              <a
+                href={project.github}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={`${project.title} GitHub`}
+                className="text-text-muted hover:text-accent transition-colors rounded-full p-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/60 focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+              >
                 <Github size={18} />
               </a>
             )}
              {project.link && (
-              <a href={project.link} target="_blank" rel="noreferrer" className="text-text-muted hover:text-accent transition-colors">
+              <a
+                href={project.link}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={`${project.title} Live link`}
+                className="text-text-muted hover:text-accent transition-colors rounded-full p-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/60 focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+              >
                 <ArrowUpRight size={18} />
               </a>
             )}
@@ -57,10 +69,10 @@ export const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
         <h3 className="text-xl font-display font-bold mb-1 text-text-strong group-hover:text-accent transition-colors">
           {project.title}
         </h3>
-        <div className="text-xs font-mono text-accent mb-3 uppercase tracking-[0.2em]">
+        <div className="text-xs font-mono text-accent mb-3 uppercase tracking-wider">
           {project.role}
         </div>
-        <p className="text-text-muted text-sm leading-relaxed mb-6 line-clamp-3">
+        <p className="text-text-muted text-sm leading-relaxed mb-6 clamp-3">
           {project.description}
         </p>
 
@@ -82,7 +94,7 @@ export const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
           </div>
           <div className="flex flex-wrap gap-2">
             {project.tech.slice(0, 3).map(t => <SkillTag key={t} name={t} />)}
-            {project.tech.length > 3 && <span className="text-[10px] text-text-muted font-mono self-center">+{project.tech.length - 3}</span>}
+            {project.tech.length > 3 && <span className="text-xs text-text-muted font-mono self-center">+{project.tech.length - 3}</span>}
           </div>
         </div>
       </div>

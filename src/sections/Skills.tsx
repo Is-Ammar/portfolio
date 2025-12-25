@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { motion, Reorder } from 'framer-motion';
+import { motion, Reorder, useReducedMotion } from 'framer-motion';
 import type { LucideIcon } from 'lucide-react';
 import {
   Activity,
@@ -64,6 +64,7 @@ const CARD_GLOWS = [
 ];
 
 export const Skills = () => {
+  const reduceMotion = useReducedMotion();
   const [skillGroups, setSkillGroups] = useState(() =>
     SKILLS.map((cat) => ({ ...cat, skills: [...cat.skills] }))
   );
@@ -80,20 +81,20 @@ export const Skills = () => {
 
   return (
     <section id="skills" className="relative py-32 bg-bg-elev-1/80 backdrop-blur-md px-6 border-y border-line/60 overflow-hidden">
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute -top-20 left-10 h-56 w-56 rounded-full bg-accent/10 blur-3xl" />
-        <div className="absolute bottom-0 right-0 h-72 w-72 rounded-full bg-accent-2/10 blur-3xl" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle,_rgba(56,230,165,0.18)_1px,_transparent_1px)] bg-[length:36px_36px] opacity-15" />
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute -top-20 left-10 h-56 w-56 rounded-full bg-accent/10 blur-3xl" />
+          <div className="absolute bottom-0 right-0 h-72 w-72 rounded-full bg-accent-2/10 blur-3xl" />
+          <div className="absolute inset-0 text-accent/20 bg-[radial-gradient(circle,_currentColor_1px,_transparent_1px)] bg-[length:36px_36px] opacity-15" />
         <motion.div
-          initial={{ x: '-20%' }}
-          animate={{ x: '120%' }}
-          transition={{ duration: 7, repeat: Infinity, ease: 'linear' }}
+          initial={reduceMotion ? { x: 0 } : { x: '-20%' }}
+          animate={reduceMotion ? { x: 0 } : { x: '120%' }}
+          transition={reduceMotion ? { duration: 0 } : { duration: 7, repeat: Infinity, ease: 'linear' }}
           className="absolute top-16 h-px w-1/3 bg-gradient-to-r from-transparent via-accent/50 to-transparent opacity-60"
         />
         <motion.div
-          initial={{ x: '120%' }}
-          animate={{ x: '-20%' }}
-          transition={{ duration: 9, repeat: Infinity, ease: 'linear' }}
+          initial={reduceMotion ? { x: 0 } : { x: '120%' }}
+          animate={reduceMotion ? { x: 0 } : { x: '-20%' }}
+          transition={reduceMotion ? { duration: 0 } : { duration: 9, repeat: Infinity, ease: 'linear' }}
           className="absolute bottom-20 h-px w-1/2 bg-gradient-to-r from-transparent via-accent-2/40 to-transparent opacity-40"
         />
       </div>
@@ -105,12 +106,12 @@ export const Skills = () => {
         className="relative z-10 max-w-[1200px] mx-auto"
       >
         <div className="flex items-center gap-4 mb-16">
-            <motion.span variants={fadeInUp} className="font-mono text-accent text-sm uppercase tracking-[0.3em]">02</motion.span>
+            <motion.span variants={fadeInUp} className="font-mono text-accent text-sm uppercase tracking-wider">02</motion.span>
             <motion.h2 variants={fadeInUp} className="text-2xl md:text-3xl font-display font-bold tracking-tight text-text-strong">TECHNICAL ARSENAL</motion.h2>
             <motion.div variants={revealLine} className="h-px bg-line flex-grow"></motion.div>
         </div>
 
-        <motion.div variants={fadeInUp} className="flex flex-wrap items-center gap-4 mb-10 text-[11px] font-mono uppercase tracking-[0.3em] text-text-muted">
+        <motion.div variants={fadeInUp} className="flex flex-wrap items-center gap-4 mb-10 text-xs sm:text-sm font-mono uppercase tracking-wider text-text-muted">
           <span className="flex items-center gap-2">
             <Sparkles size={12} className="text-accent" />
             {totalSkills} Skills Loaded
@@ -139,10 +140,10 @@ export const Skills = () => {
                 </div>
                 <div className="relative z-10">
                   <div className="flex items-center justify-between mb-6">
-                    <h3 className="font-mono text-accent text-xs uppercase tracking-widest flex items-center gap-2">
+                    <h3 className="font-mono text-accent text-xs uppercase tracking-wider flex items-center gap-2">
                       {cat.name}
                     </h3>
-                    <span className="text-[10px] font-mono uppercase tracking-widest text-text-muted">{cat.skills.length} units</span>
+                    <span className="text-xs font-mono uppercase tracking-wider text-text-muted">{cat.skills.length} units</span>
                   </div>
                   <Reorder.Group
                     axis="y"
@@ -157,7 +158,7 @@ export const Skills = () => {
                           key={skill}
                           value={skill}
                           whileHover={{ y: -2 }}
-                          whileDrag={{ scale: 1.03, boxShadow: '0 0 18px rgba(56, 230, 165, 0.35)' }}
+                          whileDrag={{ scale: 1.03, boxShadow: 'var(--glow)' }}
                           transition={{ duration: DURATION.xs, ease: EASE_OUT }}
                           className="group/skill relative flex items-center gap-3 rounded-lg border border-line/70 bg-bg/40 px-3 py-2 text-sm font-mono text-text-muted backdrop-blur-sm cursor-grab active:cursor-grabbing transition-colors"
                         >

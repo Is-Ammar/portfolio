@@ -28,7 +28,7 @@ export const Work = () => {
       >
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-16 gap-6">
             <div className="flex items-center gap-4">
-                <motion.span variants={fadeInUp} className="font-mono text-accent text-sm uppercase tracking-[0.3em]">03</motion.span>
+                <motion.span variants={fadeInUp} className="font-mono text-accent text-sm uppercase tracking-wider">03</motion.span>
                 <motion.h2 variants={fadeInUp} className="text-2xl md:text-3xl font-display font-bold tracking-tight text-text-strong">SELECTED WORK</motion.h2>
                 <motion.div variants={revealLine} className="h-px bg-line w-12 md:w-32"></motion.div>
             </div>
@@ -38,8 +38,10 @@ export const Work = () => {
                 {['All', 'AI', 'Web', 'Sys', 'Sec', 'Gfx'].map(f => (
                 <button 
                     key={f}
+                    type="button"
                     onClick={() => setFilter(f as any)}
-                    className={`px-4 py-2 text-[11px] font-mono uppercase tracking-[0.25em] transition-all rounded-full border ${filter === f ? 'bg-accent/10 border-accent text-accent shadow-[0_0_12px_rgba(56,230,165,0.25)]' : 'bg-bg-elev-1/40 border-line/60 text-text-muted hover:text-text-strong hover:bg-bg-elev-1/70'}`}
+                    className={`px-4 py-2 text-xs sm:text-sm font-mono uppercase tracking-wider transition-all rounded-full border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/60 focus-visible:ring-offset-2 focus-visible:ring-offset-bg ${filter === f ? 'bg-accent/10 border-accent text-accent shadow-glow' : 'bg-bg-elev-1/40 border-line/60 text-text-muted hover:text-text-strong hover:bg-bg-elev-1/70'}`}
+                    aria-pressed={filter === f}
                 >
                     {f}
                 </button>
@@ -60,14 +62,14 @@ export const Work = () => {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
                 transition={{ duration: DURATION.sm, ease: EASE_OUT }}
-                className={`relative bg-bg-elev-1/70 backdrop-blur-sm p-6 border transition-all group overflow-hidden flex flex-col rounded-2xl ${p.featured ? 'border-accent/40 shadow-[0_0_24px_rgba(56,230,165,0.18)]' : 'border-line/70 hover:border-accent/40 hover:shadow-card'}`}
+                className={`relative bg-bg-elev-1/70 backdrop-blur-sm p-6 pt-10 border transition-all group overflow-hidden flex flex-col rounded-2xl ${p.featured ? 'border-accent/40 shadow-card' : 'border-line/70 hover:border-accent/40 hover:shadow-card'}`}
                 >
                 {/* Hover Corner Accent */}
                 <div className="absolute top-0 right-0 w-0 h-0 border-t-[24px] border-l-[24px] border-t-accent/80 border-l-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 
                 {/* Featured Badge */}
                 {p.featured && (
-                    <div className="absolute top-4 left-4 px-2.5 py-1 rounded-full bg-accent/10 border border-accent/30 text-[9px] mb-1 font-mono text-accent uppercase tracking-[0.2em]">
+                    <div className="absolute top-4 left-4 px-2.5 py-1 rounded-full bg-accent/10 border border-accent/30 text-xs font-mono text-accent uppercase tracking-wider">
                         Featured
                     </div>
                 )}
@@ -75,53 +77,65 @@ export const Work = () => {
                 <div className={`flex justify-between items-start mb-4 ${p.featured ? 'mt-8' : 'mt-2'}`}>
                     <div className="flex flex-col">
                         <div className="flex items-center gap-2 mb-1">
-                            <span className={`w-1.5 h-1.5 rounded-full transition-all ${p.featured ? 'bg-accent shadow-[0_0_8px_rgba(56,230,165,0.8)]' : 'bg-accent/50 group-hover:bg-accent group-hover:shadow-[0_0_8px_rgba(56,230,165,0.6)]'}`}></span>
+                            <span className={`w-1.5 h-1.5 rounded-full transition-all ${p.featured ? 'bg-accent shadow-glow' : 'bg-accent/50 group-hover:bg-accent group-hover:shadow-glow'}`}></span>
                             <h4 className="font-bold text-base text-text-strong group-hover:text-accent transition-colors">{p.title}</h4>
                         </div>
-                        <div className="text-[10px] font-mono text-text-muted uppercase tracking-[0.2em] pl-3.5">
+                        <div className="text-xs font-mono text-text-muted uppercase tracking-wider pl-3.5">
                            {p.role}
                         </div>
                     </div>
                     <div className="flex gap-2">
                         {p.github && (
-                            <a href={p.github} target="_blank" rel="noreferrer" className="text-text-muted hover:text-accent transition-colors p-1.5 hover:bg-accent/10 rounded-full">
+                            <a
+                              href={p.github}
+                              target="_blank"
+                              rel="noreferrer"
+                              aria-label={`${p.title} GitHub`}
+                              className="text-text-muted hover:text-accent transition-colors p-2 hover:bg-accent/10 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/60 focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+                            >
                                 <Github size={16} />
                             </a>
                         )}
                         {p.link && (
-                            <a href={p.link} target="_blank" rel="noreferrer" className="text-text-muted hover:text-accent transition-colors p-1.5 hover:bg-accent/10 rounded-full">
+                            <a
+                              href={p.link}
+                              target="_blank"
+                              rel="noreferrer"
+                              aria-label={`${p.title} Live link`}
+                              className="text-text-muted hover:text-accent transition-colors p-2 hover:bg-accent/10 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/60 focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+                            >
                                 <ArrowUpRight size={16} />
                             </a>
                         )}
                     </div>
                 </div>
                 
-                <p className="text-sm text-text-muted/80 mb-6 leading-relaxed line-clamp-3 pl-3.5 border-l border-line-strong/50 ml-0.5 flex-grow">
+                <p className="text-sm text-text-muted/80 mb-6 leading-relaxed clamp-3 pl-3.5 border-l border-line-strong/50 ml-0.5 flex-grow">
                     {p.description}
                 </p>
                 
                 <div className="mt-auto pl-3.5">
                     {p.impact && (
                         <div className="mb-4 pb-4 border-b border-line/50 border-dashed">
-                            <div className="text-[10px] font-mono text-text-muted uppercase tracking-[0.2em] mb-1">Impact</div>
+                            <div className="text-xs font-mono text-text-muted uppercase tracking-wider mb-1">Impact</div>
                             <div className="text-xs text-text-strong font-medium">{p.impact}</div>
                         </div>
                     )}
 
                     <div className="flex flex-wrap gap-2">
                         {p.tech.slice(0, 4).map(t => (
-                        <span key={t} className="text-[10px] uppercase font-mono text-text-muted/70 bg-bg border border-line/70 px-2 py-1 rounded-full group-hover:border-accent/30 transition-colors">
+                        <span key={t} className="text-xs uppercase font-mono text-text-muted/70 bg-bg border border-line/70 px-2 py-1 rounded-full group-hover:border-accent/30 transition-colors">
                             {t}
                         </span>
                         ))}
                         {p.tech.length > 4 && (
-                            <span className="text-[10px] uppercase font-mono text-text-muted/40 px-1 py-1">+{p.tech.length - 4}</span>
+                            <span className="text-xs uppercase font-mono text-text-muted/40 px-1 py-1">+{p.tech.length - 4}</span>
                         )}
                     </div>
                 </div>
                 
                 {/* ID Watermark */}
-                <div className="absolute bottom-2 right-2 text-[9px] font-mono text-line-strong opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                <div className="absolute bottom-2 right-2 text-xs font-mono text-line-strong opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
                     ID: {p.id}
                 </div>
                 </motion.div>

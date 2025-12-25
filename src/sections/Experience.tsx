@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Calendar } from 'lucide-react';
 import { EXPERIENCE } from '../constants';
-import { DURATION, EASE_OUT, fadeInUp, staggerContainer, revealLine } from '../utils/motion';
+import { EASE_OUT, fadeInUp, staggerContainer, revealLine } from '../utils/motion';
 
 export const Experience = () => {
   return (
@@ -15,7 +15,7 @@ export const Experience = () => {
         className="mb-20"
       >
         <div className="flex items-center gap-4 mb-16">
-            <motion.span variants={fadeInUp} className="font-mono text-accent text-sm uppercase tracking-[0.3em]">04</motion.span>
+            <motion.span variants={fadeInUp} className="font-mono text-accent text-sm uppercase tracking-wider">04</motion.span>
             <motion.h2 variants={fadeInUp} className="text-2xl md:text-3xl font-display font-bold tracking-tight text-text-strong">EXPERIENCE</motion.h2>
             <motion.div variants={revealLine} className="h-px bg-line flex-grow"></motion.div>
         </div>
@@ -37,7 +37,7 @@ export const Experience = () => {
                 className="relative flex flex-col md:flex-row gap-8 md:gap-0 group"
               >
                 <div className="md:w-[30%] md:pr-12 md:text-right flex flex-col md:items-end">
-                   <div className="inline-flex items-center gap-2 font-mono text-accent text-xs uppercase tracking-[0.25em] mb-2 bg-accent/5 px-3 py-1.5 rounded-full border border-accent/20">
+                   <div className="inline-flex items-center gap-2 font-mono text-accent text-xs uppercase tracking-wider mb-2 bg-accent/5 px-3 py-1.5 rounded-full border border-accent/20">
                       <Calendar size={12} />
                       {exp.period}
                    </div>
@@ -46,7 +46,7 @@ export const Experience = () => {
 
                 <div className="absolute left-[-5px] md:left-[30%] md:-ml-[5px] top-0 md:top-1.5 z-10">
                    <motion.div 
-                     className="w-2.5 h-2.5 bg-bg border border-accent rounded-full group-hover:bg-accent group-hover:shadow-[0_0_10px_rgba(56,230,165,0.6)] transition-all duration-300"
+                     className="w-2.5 h-2.5 bg-bg border border-accent rounded-full group-hover:bg-accent group-hover:shadow-glow transition-all duration-300"
                    />
                    <div className="hidden md:block absolute top-1/2 left-full w-8 h-px bg-line group-hover:bg-accent/50 transition-colors"></div>
                 </div>
@@ -77,7 +77,7 @@ export const Experience = () => {
                       {exp.tech && (
                         <div className="flex flex-wrap gap-2 pt-4 border-t border-line/50 border-dashed">
                           {exp.tech.map((t) => (
-                            <span key={t} className="text-[10px] font-mono uppercase px-2 py-1 bg-bg border border-line/70 rounded-full text-text-muted hover:text-accent hover:border-accent/30 transition-colors">
+                            <span key={t} className="text-xs font-mono uppercase px-2 py-1 bg-bg border border-line/70 rounded-full text-text-muted hover:text-accent hover:border-accent/30 transition-colors">
                               {t}
                             </span>
                           ))}
