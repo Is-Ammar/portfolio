@@ -30,13 +30,13 @@ body {
     radial-gradient(900px circle at 70% 120%, color-mix(in srgb, var(--accent-3) 12%, transparent), transparent 60%),
     linear-gradient(180deg, color-mix(in srgb, var(--bg) 92%, var(--bg-elev-1)) 0%, var(--bg) 55%, color-mix(in srgb, var(--bg) 88%, var(--bg-elev-2)) 100%);
   color: var(--text);
-  font-family: 'Spline Sans', sans-serif;
+  font-family: 'IBM Plex Sans', sans-serif;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Fraunces', serif;
+  font-family: 'Space Grotesk', sans-serif;
   color: var(--text-strong);
 }
 
@@ -99,9 +99,7 @@ h1, h2, h3, h4, h5, h6 {
   background-image:
     radial-gradient(1000px circle at 8% -25%, color-mix(in srgb, var(--accent) 12%, transparent), transparent 60%),
     radial-gradient(900px circle at 115% 10%, color-mix(in srgb, var(--accent-2) 12%, transparent), transparent 60%),
-    radial-gradient(900px circle at 50% 120%, color-mix(in srgb, var(--accent-3) 10%, transparent), transparent 65%),
-    linear-gradient(90deg, color-mix(in srgb, var(--line) 35%, transparent) 1px, transparent 1px),
-    linear-gradient(180deg, color-mix(in srgb, var(--line) 35%, transparent) 1px, transparent 1px);
-  background-size: auto, auto, auto, 64px 64px, 64px 64px;
-  background-repeat: no-repeat, no-repeat, no-repeat, repeat, repeat;
+    radial-gradient(900px circle at 50% 120%, color-mix(in srgb, var(--accent-3) 10%, transparent), transparent 65%);
+  background-size: auto, auto, auto;
+  background-repeat: no-repeat, no-repeat, no-repeat;
 }
