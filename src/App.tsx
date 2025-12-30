@@ -36,13 +36,13 @@ const App = () => {
       <GradualBlur 
         target="page" 
         position="bottom" 
-        height="6rem"
+        height="12rem"
         responsive={true}
-        mobileHeight="5rem"
-        tabletHeight="5.5rem"
-        desktopHeight="6rem"
-        strength={1.6} 
-        divCount={6} 
+        mobileHeight="9rem"
+        tabletHeight="10rem"
+        desktopHeight="12rem"
+        strength={2} 
+        divCount={8} 
         zIndex={50} 
         opacity={1} 
         preset="smooth"

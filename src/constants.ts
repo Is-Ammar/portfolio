@@ -17,11 +17,11 @@ export const METRICS: Metric[] = [
 export const SKILLS: SkillCategory[] = [
   {
     name: "AI & ML",
-    skills: ["Python", "PyTorch", "LangChain", "RAG", "OpenAI API", "HuggingFace"]
+    skills: ["Python", "RAG", "OpenAI API"]
   },
   {
     name: "Backend & Systems",
-    skills: ["FastAPI", "Django", "Node.js", "NestJS", "PostgreSQL", "Redis", "MongoDB"]
+    skills: ["FastAPI", "Django", "Node.js", "NestJS", "PostgreSQL", "MongoDB"]
   },
   {
     name: "Frontend",
