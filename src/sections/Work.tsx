@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
+import { motion, AnimatePresence, useInView, useReducedMotion } from 'framer-motion';
 import type { LucideIcon } from 'lucide-react';
 import {
   Activity,
@@ -128,9 +128,38 @@ const getTechIcons = (tech: string[]): TechIconItem[] => {
 export const Work = () => {
   const [filter, setFilter] = useState<WorkFilter>('All');
   const [showAll, setShowAll] = useState(false);
+  const [isScrolling, setIsScrolling] = useState(false);
   const reduceMotion = useReducedMotion();
   const sectionRef = useRef<HTMLElement | null>(null);
   const pendingCollapseScroll = useRef(false);
+  const scrollTimeoutRef = useRef<number | null>(null);
+  const isScrollingRef = useRef(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!isScrollingRef.current) {
+        isScrollingRef.current = true;
+        setIsScrolling(true);
+      }
+
+      if (scrollTimeoutRef.current !== null) {
+        window.clearTimeout(scrollTimeoutRef.current);
+      }
+
+      scrollTimeoutRef.current = window.setTimeout(() => {
+        isScrollingRef.current = false;
+        setIsScrolling(false);
+      }, 150);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (scrollTimeoutRef.current !== null) {
+        window.clearTimeout(scrollTimeoutRef.current);
+      }
+    };
+  }, []);
   
   const filteredProjects = filter === 'All' 
     ? PROJECTS 
@@ -219,7 +248,7 @@ export const Work = () => {
             }}
           >
             {visibleProjects.map((p) => (
-              <WorkCard key={p.id} project={p} reduceMotion={reduceMotion} />
+              <WorkCard key={p.id} project={p} reduceMotion={reduceMotion} isScrolling={isScrolling} />
             ))}
           </AnimatePresence>
         </motion.div>
@@ -245,7 +274,18 @@ export const Work = () => {
   );
 };
 
-const WorkCard = ({ project, reduceMotion }: { project: Project; reduceMotion: boolean }) => {
+const WorkCard = ({
+  project,
+  reduceMotion,
+  isScrolling,
+}: {
+  project: Project;
+  reduceMotion: boolean;
+  isScrolling: boolean;
+}) => {
+  const cardRef = useRef<HTMLDivElement | null>(null);
+  const isInView = useInView(cardRef, { amount: 0.35 });
+  const allowMotion = !reduceMotion && !isScrolling && isInView;
   const techIcons = useMemo(
     () => getTechIcons(project.tech).slice(0, TECH_ICON_PATTERN.length),
     [project.tech]
@@ -253,6 +293,7 @@ const WorkCard = ({ project, reduceMotion }: { project: Project; reduceMotion: b
 
   return (
     <motion.div
+      ref={cardRef}
       layout
       initial={{ opacity: 0, scale: 0.96 }}
       animate={{ opacity: 1, scale: 1 }}
@@ -268,7 +309,7 @@ const WorkCard = ({ project, reduceMotion }: { project: Project; reduceMotion: b
         <div className="relative mb-6 overflow-hidden rounded-2xl border border-white/10 bg-bg-elev-2/70 transition-colors group-hover:border-accent/30">
           <div className="absolute inset-0 bg-gradient-to-br from-white/[0.05] via-transparent to-white/[0.05]" />
           <div className="relative h-[15rem] md:h-[19rem] px-5 py-6 [mask-image:radial-gradient(50%_50%_at_50%_50%,white_0%,transparent_100%)] [-webkit-mask-image:radial-gradient(50%_50%_at_50%_50%,white_0%,transparent_100%)]">
-            <TechOrbit items={techIcons} reduceMotion={reduceMotion} />
+            <TechOrbit items={techIcons} allowMotion={allowMotion} />
           </div>
           <div className="absolute left-4 top-4 inline-flex items-center gap-2 rounded-full border border-white/10 bg-bg/70 px-3 py-1 text-[10px] font-mono uppercase tracking-[0.3em] text-text-muted backdrop-blur">
             <span className="h-1.5 w-1.5 rounded-full bg-accent" />
@@ -329,14 +370,9 @@ const WorkCard = ({ project, reduceMotion }: { project: Project; reduceMotion: b
   );
 };
 
-const TechOrbit = ({
-  items,
-  reduceMotion,
-}: {
-  items: TechIconItem[];
-  reduceMotion: boolean;
-}) => {
+const TechOrbit = ({ items, allowMotion }: { items: TechIconItem[]; allowMotion: boolean }) => {
   const visibleItems = items.slice(0, TECH_ICON_PATTERN.length);
+  const shouldAnimate = allowMotion;
 
   return (
     <div className="relative flex h-full items-center justify-center">
@@ -351,19 +387,17 @@ const TechOrbit = ({
                 'flex items-center justify-center rounded-full border border-white/10 bg-white/[0.02] shadow-[0_8px_24px_rgba(0,0,0,0.35)] backdrop-blur-[2px]',
                 TECH_ICON_WRAPPER[sizeKey]
               )}
-              animate={
-                reduceMotion ? undefined : { y: [0, -4, 0], scale: [1, 1.08, 1] }
-              }
+              animate={shouldAnimate ? { y: [0, -4, 0], scale: [1, 1.08, 1] } : undefined}
               transition={
-                reduceMotion
-                  ? undefined
-                  : {
+                shouldAnimate
+                  ? {
                       duration: 1.1,
                       repeat: Infinity,
                       repeatDelay: 1.3,
                       delay: index * 0.12,
                       ease: 'easeInOut',
                     }
+                  : undefined
               }
             >
               <item.Icon className={cx(TECH_ICON_SIZE[sizeKey], item.tone)} />
@@ -371,12 +405,12 @@ const TechOrbit = ({
           );
         })}
       </div>
-      <SparkleField reduceMotion={reduceMotion} />
+      <SparkleField allowMotion={shouldAnimate} />
     </div>
   );
 };
 
-const SparkleField = ({ reduceMotion }: { reduceMotion: boolean }) => {
+const SparkleField = ({ allowMotion }: { allowMotion: boolean }) => {
   const stars = useMemo(
     () =>
       Array.from({ length: 12 }).map(() => ({
@@ -389,15 +423,35 @@ const SparkleField = ({ reduceMotion }: { reduceMotion: boolean }) => {
     []
   );
   const tones = ['bg-white/70', 'bg-accent/70', 'bg-accent-2/70', 'bg-accent-3/70'];
+  const shouldAnimate = allowMotion;
+
+  if (!shouldAnimate) {
+    return (
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute left-1/2 top-1/2 h-32 w-px -translate-x-1/2 -translate-y-1/2 bg-gradient-to-b from-transparent via-accent-3/60 to-transparent" />
+        {stars.map((star, index) => (
+          <span
+            key={`spark-${index}`}
+            className={cx('absolute rounded-full', tones[index % tones.length])}
+            style={{
+              top: `${star.top}%`,
+              left: `${star.left}%`,
+              width: `${star.size}px`,
+              height: `${star.size}px`,
+              opacity: 0.5,
+            }}
+          />
+        ))}
+      </div>
+    );
+  }
 
   return (
     <div className="absolute inset-0 pointer-events-none">
       <motion.div
         className="absolute left-1/2 top-1/2 h-32 w-px -translate-x-1/2 -translate-y-1/2 bg-gradient-to-b from-transparent via-accent-3/80 to-transparent"
-        animate={
-          reduceMotion ? undefined : { y: [-10, 10, -10], opacity: [0.4, 0.9, 0.4] }
-        }
-        transition={reduceMotion ? undefined : { duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+        animate={{ y: [-10, 10, -10], opacity: [0.4, 0.9, 0.4] }}
+        transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
       />
       {stars.map((star, index) => (
         <motion.span
@@ -409,18 +463,14 @@ const SparkleField = ({ reduceMotion }: { reduceMotion: boolean }) => {
             width: `${star.size}px`,
             height: `${star.size}px`,
           }}
-          animate={
-            reduceMotion ? undefined : { opacity: [0.2, 0.9, 0.2], scale: [1, 1.4, 1] }
-          }
+          animate={{ opacity: [0.2, 0.9, 0.2], scale: [1, 1.4, 1] }}
           transition={
-            reduceMotion
-              ? undefined
-              : {
-                  duration: star.duration,
-                  repeat: Infinity,
-                  delay: star.delay,
-                  ease: 'easeInOut',
-                }
+            {
+              duration: star.duration,
+              repeat: Infinity,
+              delay: star.delay,
+              ease: 'easeInOut',
+            }
           }
         />
       ))}

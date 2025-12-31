@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { motion, useMotionTemplate, useMotionValue, useReducedMotion, useScroll, useTransform } from 'framer-motion';
+import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import { ArrowRight, Cpu, MapPin, Shield, Sparkles } from 'lucide-react';
 import { SOCIALS } from '../constants';
 import { DURATION, fadeInUp, staggerContainer } from '../utils/motion';
@@ -34,57 +34,6 @@ const ScrambleText = ({ text, className }: { text: string; className?: string })
   return <span className={className}>{display}</span>;
 };
 
-const ElegantShape = ({
-  className = '',
-  delay = 1,
-  width = 400,
-  height = 100,
-  rotate = 0,
-  gradient = 'from-white/10',
-  reduceMotion = false,
-}: {
-  className?: string;
-  delay?: number;
-  width?: number;
-  height?: number;
-  rotate?: number;
-  gradient?: string;
-  reduceMotion?: boolean;
-}) => {
-  return (
-    <motion.div
-      initial={
-        reduceMotion
-          ? { opacity: 1, y: 0, rotate }
-          : { opacity: 0, y: -150, rotate: rotate - 15 }
-      }
-      animate={{ opacity: 1, y: 0, rotate }}
-      transition={
-        reduceMotion
-          ? undefined
-          : {
-              duration: 10,
-              delay,
-              ease: [0.23, 0.86, 0.39, 0.96],
-              opacity: { duration: 1.2 },
-            }
-      }
-      className={`absolute ${className}`}
-    >
-      <motion.div
-        animate={reduceMotion ? undefined : { y: [0, 16, 0] }}
-        transition={reduceMotion ? undefined : { duration: 12, repeat: Infinity, ease: 'easeInOut' }}
-        style={{ width, height }}
-        className="relative"
-      >
-        <div
-          className={`absolute inset-0 rounded-full bg-gradient-to-r to-transparent ${gradient} backdrop-blur-[2px] border-2 border-white/10 shadow-[0_8px_32px_0_rgba(255,255,255,0.08)] after:absolute after:inset-0 after:rounded-full after:bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.18),transparent_70%)]`}
-        />
-      </motion.div>
-    </motion.div>
-  );
-};
-
 export const Hero = () => {
   const ref = useRef(null);
   const reduceMotion = useReducedMotion();
@@ -93,88 +42,11 @@ export const Hero = () => {
   const y = useTransform(scrollYProgress, [0, 1], ['0%', '40%']);
   const opacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
 
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-
-  function handleMouseMove({ currentTarget, clientX, clientY }: React.MouseEvent) {
-    if (reduceMotion) return;
-    const { left, top } = currentTarget.getBoundingClientRect();
-    mouseX.set(clientX - left);
-    mouseY.set(clientY - top);
-  }
-
-  const spotlight = useMotionTemplate`
-    radial-gradient(
-      700px circle at ${mouseX}px ${mouseY}px,
-      color-mix(in srgb, var(--accent) 20%, transparent),
-      transparent 75%
-    )
-  `;
-
   return (
     <section
       ref={ref}
-      onMouseMove={handleMouseMove}
-      className="relative min-h-screen overflow-hidden px-6 pb-16 pt-32 lg:px-12"
+      className="relative min-h-screen px-6 pb-16 pt-32 lg:px-12"
     >
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 via-transparent to-rose-500/10 blur-3xl" />
-        <div className="absolute inset-0 overflow-hidden">
-          <ElegantShape
-            reduceMotion={reduceMotion}
-            delay={0.3}
-            width={600}
-            height={140}
-            rotate={12}
-            gradient="from-indigo-500/15"
-            className="left-[-12%] top-[14%] md:left-[-6%] md:top-[18%]"
-          />
-          <ElegantShape
-            reduceMotion={reduceMotion}
-            delay={0.5}
-            width={520}
-            height={120}
-            rotate={-14}
-            gradient="from-rose-500/15"
-            className="right-[-8%] top-[68%] md:right-[-2%] md:top-[72%]"
-          />
-          <ElegantShape
-            reduceMotion={reduceMotion}
-            delay={0.4}
-            width={320}
-            height={86}
-            rotate={-8}
-            gradient="from-violet-500/15"
-            className="left-[6%] bottom-[6%] md:left-[12%] md:bottom-[10%]"
-          />
-          <ElegantShape
-            reduceMotion={reduceMotion}
-            delay={0.6}
-            width={220}
-            height={64}
-            rotate={18}
-            gradient="from-amber-500/15"
-            className="right-[12%] top-[10%] md:right-[18%] md:top-[14%]"
-          />
-          <ElegantShape
-            reduceMotion={reduceMotion}
-            delay={0.7}
-            width={160}
-            height={46}
-            rotate={-22}
-            gradient="from-cyan-500/15"
-            className="left-[22%] top-[6%] md:left-[26%] md:top-[9%]"
-          />
-        </div>
-        <div className="absolute inset-0 bg-gradient-to-t from-[#030303] via-transparent to-[#030303]/80" />
-        <div className="absolute inset-y-0 right-0 hidden w-px bg-gradient-to-b from-transparent via-line to-transparent lg:block" />
-      </div>
-
-      <motion.div
-        className="absolute inset-0 pointer-events-none"
-        style={{ background: reduceMotion ? 'none' : spotlight, opacity: reduceMotion ? 0 : 0.6 }}
-      />
-
       <motion.div
         variants={staggerContainer}
         initial={reduceMotion ? false : 'initial'}
