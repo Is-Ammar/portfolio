@@ -1,34 +1,38 @@
 :root {
   color-scheme: dark;
-  --bg: #0c1222;
-  --bg-elev-1: #0f172a;
-  --bg-elev-2: #1b2335;
-  --surface: #1b2335;
-  --text-strong: #e7e8ea;
-  --text: #d4d5d9;
-  --text-muted: #bcbec3;
-  --accent: #06b6d4;
-  --accent-2: #0795b0;
-  --accent-3: #5dd0e3;
-  --success: #0795b0;
-  --error: #08859f;
-  --line: #2c3344;
-  --line-strong: #3a4150;
-  --focus: #06b6d4;
-  --shadow: 0 18px 45px rgba(2, 6, 23, 0.6);
-  --glow: 0 0 24px color-mix(in srgb, var(--accent) 45%, transparent);
-  --liquid-1: #06b6d4;
-  --liquid-2: #0795b0;
-  --liquid-3: #5dd0e3;
+  --bg: #030303;
+  --bg-elev-1: #0b0b13;
+  --bg-elev-2: #11121a;
+  --surface: #0f1118;
+  --text-strong: #f5f5f7;
+  --text: #d6d6de;
+  --text-muted: #a3a3b3;
+  --accent: #6366f1;
+  --accent-2: #f43f5e;
+  --accent-3: #22d3ee;
+  --success: #22d3ee;
+  --error: #fb7185;
+  --line: #1f2330;
+  --line-strong: #2b3040;
+  --focus: #a5b4fc;
+  --shadow: 0 22px 60px rgba(0, 0, 0, 0.6);
+  --glow: 0 0 28px color-mix(in srgb, var(--accent) 50%, transparent);
+  --liquid-1: #6366f1;
+  --liquid-2: #f43f5e;
+  --liquid-3: #22d3ee;
+  --glow-x: 50;
+  --glow-y: 50;
+  --glow-xp: 0.5;
+  --glow-yp: 0.5;
 }
 
 body {
   background-color: var(--bg);
   background-image:
-    radial-gradient(1200px circle at 6% -10%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 55%),
-    radial-gradient(1000px circle at 95% 10%, color-mix(in srgb, var(--accent-2) 12%, transparent), transparent 60%),
-    radial-gradient(900px circle at 70% 120%, color-mix(in srgb, var(--accent-3) 12%, transparent), transparent 60%),
-    linear-gradient(180deg, color-mix(in srgb, var(--bg) 92%, var(--bg-elev-1)) 0%, var(--bg) 55%, color-mix(in srgb, var(--bg) 88%, var(--bg-elev-2)) 100%);
+    radial-gradient(1200px circle at 10% -10%, color-mix(in srgb, var(--accent) 12%, transparent), transparent 60%),
+    radial-gradient(1000px circle at 92% 12%, color-mix(in srgb, var(--accent-2) 10%, transparent), transparent 60%),
+    radial-gradient(900px circle at 70% 115%, color-mix(in srgb, var(--accent-3) 12%, transparent), transparent 65%),
+    linear-gradient(180deg, #030303 0%, #030303 55%, #090a12 100%);
   color: var(--text);
   font-family: 'IBM Plex Sans', sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -96,10 +100,78 @@ h1, h2, h3, h4, h5, h6 {
   position: relative;
   overflow: hidden;
   isolation: isolate;
+  background-color: var(--bg);
   background-image:
-    radial-gradient(1000px circle at 8% -25%, color-mix(in srgb, var(--accent) 12%, transparent), transparent 60%),
-    radial-gradient(900px circle at 115% 10%, color-mix(in srgb, var(--accent-2) 12%, transparent), transparent 60%),
-    radial-gradient(900px circle at 50% 120%, color-mix(in srgb, var(--accent-3) 10%, transparent), transparent 65%);
-  background-size: auto, auto, auto;
-  background-repeat: no-repeat, no-repeat, no-repeat;
+    radial-gradient(620px 140px at -12% 18%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 70%),
+    radial-gradient(520px 120px at 108% 70%, color-mix(in srgb, var(--accent-2) 14%, transparent), transparent 70%),
+    radial-gradient(340px 90px at 18% 88%, color-mix(in srgb, var(--accent-3) 12%, transparent), transparent 70%),
+    radial-gradient(1000px circle at 8% -25%, color-mix(in srgb, var(--accent) 8%, transparent), transparent 60%),
+    radial-gradient(900px circle at 115% 10%, color-mix(in srgb, var(--accent-2) 8%, transparent), transparent 60%),
+    radial-gradient(900px circle at 50% 120%, color-mix(in srgb, var(--accent-3) 7%, transparent), transparent 65%),
+    linear-gradient(180deg, #030303 0%, #030303 55%, #0b0b18 100%);
+  background-size: auto;
+  background-repeat: no-repeat;
+}
+
+.glow-card {
+  position: relative;
+  isolation: isolate;
+  --glow-base: 235;
+  --glow-spread: 120;
+  --glow-border-size: 2px;
+  --glow-spot-size: 320px;
+  --glow-border-opacity: 0.5;
+  --glow-border-spot-opacity: 0.95;
+  --glow-border-light-opacity: 0.55;
+}
+
+.glow-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: var(--glow-border-size);
+  border-radius: inherit;
+  pointer-events: none;
+  box-sizing: border-box;
+  background-attachment: fixed;
+  background-image:
+    radial-gradient(
+      var(--glow-spot-size) var(--glow-spot-size) at
+      calc(var(--glow-x) * 1px)
+      calc(var(--glow-y) * 1px),
+      hsl(
+        calc(var(--glow-base) + (var(--glow-xp, 0.5) * var(--glow-spread)))
+        90%
+        70%
+        / var(--glow-border-spot-opacity)
+      ),
+      transparent 70%
+    ),
+    radial-gradient(
+      calc(var(--glow-spot-size) * 0.55) calc(var(--glow-spot-size) * 0.55) at
+      calc(var(--glow-x) * 1px)
+      calc(var(--glow-y) * 1px),
+      hsl(0 0% 100% / var(--glow-border-light-opacity)),
+      transparent 75%
+    );
+  opacity: var(--glow-border-opacity);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+.glow-card--soft {
+  --glow-border-size: 1px;
+  --glow-spot-size: 160px;
+  --glow-border-opacity: 0.55;
+  --glow-border-light-opacity: 0.4;
+}
+
+@media (pointer: coarse) {
+  .glow-card {
+    --glow-border-opacity: 0.5;
+    --glow-spot-size: 180px;
+  }
 }

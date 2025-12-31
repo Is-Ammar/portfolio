@@ -21,13 +21,36 @@ const App = () => {
     };
   }, [prefersReducedMotion]);
 
+  useEffect(() => {
+    const root = document.documentElement;
+
+    const updatePointer = (event: PointerEvent) => {
+      const { clientX, clientY } = event;
+      const width = window.innerWidth || 1;
+      const height = window.innerHeight || 1;
+
+      root.style.setProperty('--glow-x', clientX.toFixed(2));
+      root.style.setProperty('--glow-y', clientY.toFixed(2));
+      root.style.setProperty('--glow-xp', (clientX / width).toFixed(2));
+      root.style.setProperty('--glow-yp', (clientY / height).toFixed(2));
+    };
+
+    updatePointer({
+      clientX: window.innerWidth / 2,
+      clientY: window.innerHeight / 2,
+    } as PointerEvent);
+
+    window.addEventListener('pointermove', updatePointer, { passive: true });
+    return () => window.removeEventListener('pointermove', updatePointer);
+  }, []);
+
   return (
     <div className="min-h-screen w-full relative text-text selection:bg-accent selection:text-bg overflow-x-hidden font-body">
       {/* Dark Horizon Glow */}
       <div
         className="absolute inset-0 z-0"
         style={{
-          background: 'radial-gradient(125% 125% at 50% 10%, #000000 40%, #0d1a36 100%)'
+          background: 'radial-gradient(125% 125% at 50% 10%, #030303 35%, #0b0b18 100%)'
         }}
       />
       

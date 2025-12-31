@@ -1,13 +1,132 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
-import { ArrowRight, ArrowUpRight, Filter, Github } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
+import {
+  Activity,
+  AppWindow,
+  ArrowRight,
+  ArrowUpRight,
+  Atom,
+  BrainCircuit,
+  CircuitBoard,
+  Code2,
+  Database,
+  Filter,
+  GitBranch,
+  Github,
+  Layers,
+  Network,
+  Orbit,
+  Paintbrush,
+  Server,
+  Shield,
+  Sparkles,
+  Terminal,
+} from 'lucide-react';
 import { PROJECTS } from '../constants';
+import type { Project } from '../types';
 import { DURATION, EASE_OUT, fadeInUp, staggerContainer, revealLine } from '../utils/motion';
 
 const MAX_VISIBLE = 6;
+type WorkFilter = 'All' | 'AI' | 'Web' | 'Sys' | 'Sec' | 'Gfx';
+const FILTERS: WorkFilter[] = ['All', 'AI', 'Web', 'Sys', 'Sec', 'Gfx'];
+const cx = (...classes: Array<string | undefined | false | null>) =>
+  classes.filter(Boolean).join(' ');
+
+type TechIconConfig = {
+  Icon: LucideIcon;
+  tone: string;
+};
+
+type TechIconItem = TechIconConfig & {
+  name: string;
+};
+
+const TECH_ICON_FALLBACK: TechIconConfig = {
+  Icon: Code2,
+  tone: 'text-text-muted/80',
+};
+
+const TECH_ICON_MAP: Record<string, TechIconConfig> = {
+  React: { Icon: Atom, tone: 'text-accent-3' },
+  TypeScript: { Icon: Code2, tone: 'text-accent' },
+  'Node.js': { Icon: Server, tone: 'text-accent-2' },
+  MongoDB: { Icon: Database, tone: 'text-accent-3' },
+  'D3.js': { Icon: Orbit, tone: 'text-accent-3' },
+  Tailwind: { Icon: Paintbrush, tone: 'text-accent' },
+  'Tailwind CSS': { Icon: Paintbrush, tone: 'text-accent' },
+  'CSS Grid': { Icon: AppWindow, tone: 'text-accent-2' },
+  'CSS3 Animations': { Icon: Sparkles, tone: 'text-accent-3' },
+  'Styled Components': { Icon: Paintbrush, tone: 'text-accent-2' },
+  'REST API': { Icon: Network, tone: 'text-accent-3' },
+  'REST APIs': { Icon: Network, tone: 'text-accent-3' },
+  CORS: { Icon: Shield, tone: 'text-accent-2' },
+  Buffer: { Icon: Shield, tone: 'text-accent-2' },
+  LocalStorage: { Icon: Database, tone: 'text-accent-3' },
+  Python: { Icon: Terminal, tone: 'text-accent-3' },
+  'OpenAI API': { Icon: BrainCircuit, tone: 'text-accent-3' },
+  LangChain: { Icon: BrainCircuit, tone: 'text-accent-3' },
+  C: { Icon: Terminal, tone: 'text-text-strong' },
+  'C++': { Icon: Terminal, tone: 'text-text-strong' },
+  'Unix API': { Icon: Terminal, tone: 'text-text-strong' },
+  'POSIX Signals': { Icon: CircuitBoard, tone: 'text-accent-2' },
+  'Process Management': { Icon: Layers, tone: 'text-accent' },
+  Multithreading: { Icon: GitBranch, tone: 'text-accent' },
+  pthreads: { Icon: GitBranch, tone: 'text-accent' },
+  Mutexes: { Icon: GitBranch, tone: 'text-accent' },
+  Synchronization: { Icon: Network, tone: 'text-accent' },
+  Algorithms: { Icon: CircuitBoard, tone: 'text-accent-3' },
+  'Complexity Analysis': { Icon: CircuitBoard, tone: 'text-accent-3' },
+  'Data Structures': { Icon: Layers, tone: 'text-accent' },
+  'Linear Algebra': { Icon: CircuitBoard, tone: 'text-accent-2' },
+  'Complex Mathematics': { Icon: CircuitBoard, tone: 'text-accent-2' },
+  MiniLibX: { Icon: AppWindow, tone: 'text-accent' },
+  'Ray Tracing': { Icon: Orbit, tone: 'text-accent-2' },
+  'Computer Graphics': { Icon: Orbit, tone: 'text-accent-2' },
+  Express: { Icon: Server, tone: 'text-accent-2' },
+  'CLI Testing': { Icon: Terminal, tone: 'text-accent' },
+  Subprocess: { Icon: Terminal, tone: 'text-accent' },
+  Randomization: { Icon: Sparkles, tone: 'text-accent-3' },
+  'Minimax Algorithm': { Icon: BrainCircuit, tone: 'text-accent-3' },
+  'Data Analysis': { Icon: Activity, tone: 'text-accent-3' },
+  'Real-time Telemetry': { Icon: Activity, tone: 'text-accent-2' },
+  'Systems Monitoring': { Icon: Activity, tone: 'text-accent-2' },
+  'Navigation Software': { Icon: Network, tone: 'text-accent' },
+  Compliance: { Icon: Shield, tone: 'text-accent-2' },
+  'Integrated Systems': { Icon: Layers, tone: 'text-accent' },
+  'Incident Response': { Icon: Shield, tone: 'text-accent-2' },
+};
+
+const TECH_ICON_WRAPPER = {
+  sm: 'h-9 w-9',
+  md: 'h-12 w-12',
+  lg: 'h-14 w-14',
+} as const;
+
+const TECH_ICON_SIZE = {
+  sm: 'h-4 w-4',
+  md: 'h-5 w-5',
+  lg: 'h-6 w-6',
+} as const;
+
+const TECH_ICON_PATTERN: Array<keyof typeof TECH_ICON_WRAPPER> = ['sm', 'md', 'lg', 'md', 'sm'];
+
+const getTechIcons = (tech: string[]): TechIconItem[] => {
+  const seen = new Set<string>();
+  return tech
+    .filter((name) => {
+      if (seen.has(name)) return false;
+      seen.add(name);
+      return true;
+    })
+    .map((name) => ({
+      name,
+      ...(TECH_ICON_MAP[name] ?? TECH_ICON_FALLBACK),
+    }));
+};
 
 export const Work = () => {
-  const [filter, setFilter] = useState<'All' | 'AI' | 'Web' | 'Sys' | 'Sec' | 'Gfx'>('All');
+  const [filter, setFilter] = useState<WorkFilter>('All');
   const [showAll, setShowAll] = useState(false);
   const reduceMotion = useReducedMotion();
   const sectionRef = useRef<HTMLElement | null>(null);
@@ -24,9 +143,11 @@ export const Work = () => {
         return false;
     });
 
-  useEffect(() => {
+  const handleFilterChange = useCallback((nextFilter: WorkFilter) => {
+    setFilter(nextFilter);
     setShowAll(false);
-  }, [filter]);
+    pendingCollapseScroll.current = false;
+  }, []);
 
   const scrollToWork = useCallback(() => {
     sectionRef.current?.scrollIntoView({
@@ -70,11 +191,11 @@ export const Work = () => {
 
           <motion.div variants={fadeInUp} className="flex items-center gap-2 overflow-x-auto pb-2 no-scrollbar">
             <Filter size={14} className="mr-2 shrink-0 text-accent-3/70" />
-            {['All', 'AI', 'Web', 'Sys', 'Sec', 'Gfx'].map((f) => (
+            {FILTERS.map((f) => (
               <button
                 key={f}
                 type="button"
-                onClick={() => setFilter(f as any)}
+                onClick={() => handleFilterChange(f)}
                 className={`rounded-full border px-4 py-2 text-[11px] font-mono uppercase tracking-[0.3em] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/60 focus-visible:ring-offset-2 focus-visible:ring-offset-bg ${
                   filter === f
                     ? 'border-accent bg-accent/10 text-accent shadow-glow'
@@ -98,94 +219,7 @@ export const Work = () => {
             }}
           >
             {visibleProjects.map((p) => (
-              <motion.div
-                layout
-                key={p.id}
-                initial={{ opacity: 0, scale: 0.96 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.96 }}
-                transition={{ duration: DURATION.sm, ease: EASE_OUT }}
-                className={`group relative flex h-full flex-col overflow-hidden rounded-[28px] border bg-bg-elev-1/80 p-6 pt-10 shadow-card transition-all ${
-                  p.featured ? 'border-accent/40' : 'border-line/70 hover:border-accent/40'
-                }`}
-              >
-                <div className="absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
-                  <div className="absolute -inset-10 bg-[radial-gradient(circle_at_20%_20%,color-mix(in_srgb,var(--accent)_18%,transparent),transparent_55%)]" />
-                </div>
-
-                {p.featured && (
-                  <div className="absolute top-4 left-4 rounded-full border border-accent/30 bg-accent/10 px-2.5 py-1 text-[11px] font-mono uppercase tracking-[0.3em] text-accent">
-                    Featured
-                  </div>
-                )}
-
-                <div className={`relative z-10 mb-4 flex items-start justify-between ${p.featured ? 'mt-8' : 'mt-2'}`}>
-                  <div className="flex flex-col">
-                    <div className="mb-1 flex items-center gap-2">
-                      <span className={`h-2 w-2 rounded-full transition-all ${p.featured ? 'bg-accent shadow-glow' : 'bg-accent/50 group-hover:bg-accent'}`} />
-                      <h4 className="text-base font-semibold text-text-strong transition-colors group-hover:text-accent">{p.title}</h4>
-                    </div>
-                    <div className="pl-4 text-[11px] font-mono uppercase tracking-[0.3em] text-text-muted">{p.role}</div>
-                  </div>
-                  <div className="flex gap-2">
-                    {p.github && (
-                      <a
-                        href={p.github}
-                        target="_blank"
-                        rel="noreferrer"
-                        aria-label={`${p.title} GitHub`}
-                        className="rounded-full p-2 text-text-muted transition-colors hover:bg-accent/10 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/60 focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
-                      >
-                        <Github size={16} />
-                      </a>
-                    )}
-                    {p.link && (
-                      <a
-                        href={p.link}
-                        target="_blank"
-                        rel="noreferrer"
-                        aria-label={`${p.title} Live link`}
-                        className="rounded-full p-2 text-text-muted transition-colors hover:bg-accent/10 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/60 focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
-                      >
-                        <ArrowUpRight size={16} />
-                      </a>
-                    )}
-                  </div>
-                </div>
-
-                <p className="relative z-10 mb-6 flex-grow border-l border-line-strong/60 pl-4 text-sm leading-relaxed text-text-muted/90">
-                  {p.description}
-                </p>
-
-                <div className="relative z-10 mt-auto pl-4">
-                  {p.impact && (
-                    <div className="mb-4 border-b border-dashed border-line/60 pb-4">
-                      <div className="mb-1 text-[11px] font-mono uppercase tracking-[0.3em] text-accent-2/80">Impact</div>
-                      <div className="text-xs font-medium text-text-strong">{p.impact}</div>
-                    </div>
-                  )}
-
-                  <div className="flex flex-wrap gap-2">
-                    {p.tech.slice(0, 4).map((t) => (
-                      <span
-                        key={t}
-                        className="rounded-full border border-line/70 bg-bg px-2 py-1 text-[11px] font-mono uppercase tracking-[0.2em] text-text-muted/80 transition-colors group-hover:border-accent/30"
-                      >
-                        {t}
-                      </span>
-                    ))}
-                    {p.tech.length > 4 && (
-                      <span className="px-1 py-1 text-[11px] font-mono uppercase tracking-[0.3em] text-text-muted/50">
-                        +{p.tech.length - 4}
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                <div className="absolute bottom-2 right-2 text-[10px] font-mono uppercase tracking-[0.3em] text-line-strong opacity-0 transition-opacity group-hover:opacity-100 pointer-events-none">
-                  ID: {p.id}
-                </div>
-              </motion.div>
+              <WorkCard key={p.id} project={p} reduceMotion={reduceMotion} />
             ))}
           </AnimatePresence>
         </motion.div>
@@ -208,6 +242,189 @@ export const Work = () => {
         )}
       </motion.div>
     </section>
+  );
+};
+
+const WorkCard = ({ project, reduceMotion }: { project: Project; reduceMotion: boolean }) => {
+  const techIcons = useMemo(
+    () => getTechIcons(project.tech).slice(0, TECH_ICON_PATTERN.length),
+    [project.tech]
+  );
+
+  return (
+    <motion.div
+      layout
+      initial={{ opacity: 0, scale: 0.96 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.96 }}
+      transition={{ duration: DURATION.sm, ease: EASE_OUT }}
+      className="glow-card group relative flex h-full flex-col overflow-hidden rounded-[28px] border border-white/10 bg-bg-elev-1/70 p-6 shadow-[2px_4px_16px_0px_rgba(248,248,248,0.04)_inset] backdrop-blur transition-all duration-500"
+    >
+      <div className="absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
+        <div className="absolute -inset-12 bg-[radial-gradient(circle_at_20%_20%,color-mix(in_srgb,var(--accent)_22%,transparent),transparent_60%)]" />
+      </div>
+
+      <div className="relative z-10 flex h-full flex-col">
+        <div className="relative mb-6 overflow-hidden rounded-2xl border border-white/10 bg-bg-elev-2/70 transition-colors group-hover:border-accent/30">
+          <div className="absolute inset-0 bg-gradient-to-br from-white/[0.05] via-transparent to-white/[0.05]" />
+          <div className="relative h-[15rem] md:h-[19rem] px-5 py-6 [mask-image:radial-gradient(50%_50%_at_50%_50%,white_0%,transparent_100%)] [-webkit-mask-image:radial-gradient(50%_50%_at_50%_50%,white_0%,transparent_100%)]">
+            <TechOrbit items={techIcons} reduceMotion={reduceMotion} />
+          </div>
+          <div className="absolute left-4 top-4 inline-flex items-center gap-2 rounded-full border border-white/10 bg-bg/70 px-3 py-1 text-[10px] font-mono uppercase tracking-[0.3em] text-text-muted backdrop-blur">
+            <span className="h-1.5 w-1.5 rounded-full bg-accent" />
+            {project.category}
+          </div>
+          {project.featured && (
+            <div className="absolute right-4 top-4 rounded-full border border-accent/40 bg-accent/15 px-3 py-1 text-[10px] font-mono uppercase tracking-[0.3em] text-accent">
+              Featured
+            </div>
+          )}
+        </div>
+
+        <div className="mb-4">
+          <h4 className="text-xl font-semibold text-text-strong transition-colors group-hover:text-accent">
+            {project.title}
+          </h4>
+          <div className="mt-2 text-[11px] font-mono uppercase tracking-[0.3em] text-text-muted">
+            {project.role}
+          </div>
+        </div>
+
+        <p className="mb-6 flex-grow text-sm leading-relaxed text-text-muted/90">
+          {project.description}
+        </p>
+
+        <div className="mt-auto flex items-center justify-between gap-4 border-t border-line/60 pt-4">
+          <div className="min-w-0">
+            <div className="text-[10px] font-mono uppercase tracking-[0.3em] text-accent-2/80">Impact</div>
+            <div className="text-xs text-text-strong">{project.impact}</div>
+          </div>
+          <div className="flex shrink-0 items-center gap-2">
+            {project.github && (
+              <a
+                href={project.github}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={`${project.title} GitHub`}
+                className="rounded-full border border-white/10 bg-bg/60 p-2 text-text-muted transition-colors hover:border-accent/40 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/60 focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+              >
+                <Github size={16} />
+              </a>
+            )}
+            {project.link && (
+              <a
+                href={project.link}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={`${project.title} Live link`}
+                className="rounded-full border border-white/10 bg-bg/60 p-2 text-text-muted transition-colors hover:border-accent/40 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/60 focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+              >
+                <ArrowUpRight size={16} />
+              </a>
+            )}
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
+const TechOrbit = ({
+  items,
+  reduceMotion,
+}: {
+  items: TechIconItem[];
+  reduceMotion: boolean;
+}) => {
+  const visibleItems = items.slice(0, TECH_ICON_PATTERN.length);
+
+  return (
+    <div className="relative flex h-full items-center justify-center">
+      <div className="relative z-10 flex items-center gap-3">
+        {visibleItems.map((item, index) => {
+          const sizeKey = TECH_ICON_PATTERN[index % TECH_ICON_PATTERN.length];
+          return (
+            <motion.div
+              key={`${item.name}-${index}`}
+              title={item.name}
+              className={cx(
+                'flex items-center justify-center rounded-full border border-white/10 bg-white/[0.02] shadow-[0_8px_24px_rgba(0,0,0,0.35)] backdrop-blur-[2px]',
+                TECH_ICON_WRAPPER[sizeKey]
+              )}
+              animate={
+                reduceMotion ? undefined : { y: [0, -4, 0], scale: [1, 1.08, 1] }
+              }
+              transition={
+                reduceMotion
+                  ? undefined
+                  : {
+                      duration: 1.1,
+                      repeat: Infinity,
+                      repeatDelay: 1.3,
+                      delay: index * 0.12,
+                      ease: 'easeInOut',
+                    }
+              }
+            >
+              <item.Icon className={cx(TECH_ICON_SIZE[sizeKey], item.tone)} />
+            </motion.div>
+          );
+        })}
+      </div>
+      <SparkleField reduceMotion={reduceMotion} />
+    </div>
+  );
+};
+
+const SparkleField = ({ reduceMotion }: { reduceMotion: boolean }) => {
+  const stars = useMemo(
+    () =>
+      Array.from({ length: 12 }).map(() => ({
+        top: Math.random() * 100,
+        left: Math.random() * 100,
+        size: Math.random() > 0.7 ? 3 : 2,
+        delay: Math.random() * 2,
+        duration: 3 + Math.random() * 3,
+      })),
+    []
+  );
+  const tones = ['bg-white/70', 'bg-accent/70', 'bg-accent-2/70', 'bg-accent-3/70'];
+
+  return (
+    <div className="absolute inset-0 pointer-events-none">
+      <motion.div
+        className="absolute left-1/2 top-1/2 h-32 w-px -translate-x-1/2 -translate-y-1/2 bg-gradient-to-b from-transparent via-accent-3/80 to-transparent"
+        animate={
+          reduceMotion ? undefined : { y: [-10, 10, -10], opacity: [0.4, 0.9, 0.4] }
+        }
+        transition={reduceMotion ? undefined : { duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+      />
+      {stars.map((star, index) => (
+        <motion.span
+          key={`spark-${index}`}
+          className={cx('absolute rounded-full', tones[index % tones.length])}
+          style={{
+            top: `${star.top}%`,
+            left: `${star.left}%`,
+            width: `${star.size}px`,
+            height: `${star.size}px`,
+          }}
+          animate={
+            reduceMotion ? undefined : { opacity: [0.2, 0.9, 0.2], scale: [1, 1.4, 1] }
+          }
+          transition={
+            reduceMotion
+              ? undefined
+              : {
+                  duration: star.duration,
+                  repeat: Infinity,
+                  delay: star.delay,
+                  ease: 'easeInOut',
+                }
+          }
+        />
+      ))}
+    </div>
   );
 };
 

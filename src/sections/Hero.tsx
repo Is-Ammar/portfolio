@@ -34,6 +34,57 @@ const ScrambleText = ({ text, className }: { text: string; className?: string })
   return <span className={className}>{display}</span>;
 };
 
+const ElegantShape = ({
+  className = '',
+  delay = 0,
+  width = 400,
+  height = 100,
+  rotate = 0,
+  gradient = 'from-white/10',
+  reduceMotion = false,
+}: {
+  className?: string;
+  delay?: number;
+  width?: number;
+  height?: number;
+  rotate?: number;
+  gradient?: string;
+  reduceMotion?: boolean;
+}) => {
+  return (
+    <motion.div
+      initial={
+        reduceMotion
+          ? { opacity: 1, y: 0, rotate }
+          : { opacity: 0, y: -150, rotate: rotate - 15 }
+      }
+      animate={{ opacity: 1, y: 0, rotate }}
+      transition={
+        reduceMotion
+          ? undefined
+          : {
+              duration: 2.4,
+              delay,
+              ease: [0.23, 0.86, 0.39, 0.96],
+              opacity: { duration: 1.2 },
+            }
+      }
+      className={`absolute ${className}`}
+    >
+      <motion.div
+        animate={reduceMotion ? undefined : { y: [0, 16, 0] }}
+        transition={reduceMotion ? undefined : { duration: 12, repeat: Infinity, ease: 'easeInOut' }}
+        style={{ width, height }}
+        className="relative"
+      >
+        <div
+          className={`absolute inset-0 rounded-full bg-gradient-to-r to-transparent ${gradient} backdrop-blur-[2px] border-2 border-white/10 shadow-[0_8px_32px_0_rgba(255,255,255,0.08)] after:absolute after:inset-0 after:rounded-full after:bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.18),transparent_70%)]`}
+        />
+      </motion.div>
+    </motion.div>
+  );
+};
+
 export const Hero = () => {
   const ref = useRef(null);
   const reduceMotion = useReducedMotion();
@@ -64,18 +115,64 @@ export const Hero = () => {
     <section
       ref={ref}
       onMouseMove={handleMouseMove}
-      className="relative min-h-screen px-6 pb-16 pt-32 lg:px-12"
+      className="relative min-h-screen overflow-hidden px-6 pb-16 pt-32 lg:px-12"
     >
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute inset-0 opacity-60 [background:radial-gradient(circle_at_20%_20%,color-mix(in_srgb,var(--accent)_12%,transparent),transparent_55%)]" />
+        <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 via-transparent to-rose-500/10 blur-3xl" />
+        <div className="absolute inset-0 overflow-hidden">
+          <ElegantShape
+            reduceMotion={reduceMotion}
+            delay={0.3}
+            width={600}
+            height={140}
+            rotate={12}
+            gradient="from-indigo-500/15"
+            className="left-[-12%] top-[14%] md:left-[-6%] md:top-[18%]"
+          />
+          <ElegantShape
+            reduceMotion={reduceMotion}
+            delay={0.5}
+            width={520}
+            height={120}
+            rotate={-14}
+            gradient="from-rose-500/15"
+            className="right-[-8%] top-[68%] md:right-[-2%] md:top-[72%]"
+          />
+          <ElegantShape
+            reduceMotion={reduceMotion}
+            delay={0.4}
+            width={320}
+            height={86}
+            rotate={-8}
+            gradient="from-violet-500/15"
+            className="left-[6%] bottom-[6%] md:left-[12%] md:bottom-[10%]"
+          />
+          <ElegantShape
+            reduceMotion={reduceMotion}
+            delay={0.6}
+            width={220}
+            height={64}
+            rotate={18}
+            gradient="from-amber-500/15"
+            className="right-[12%] top-[10%] md:right-[18%] md:top-[14%]"
+          />
+          <ElegantShape
+            reduceMotion={reduceMotion}
+            delay={0.7}
+            width={160}
+            height={46}
+            rotate={-22}
+            gradient="from-cyan-500/15"
+            className="left-[22%] top-[6%] md:left-[26%] md:top-[9%]"
+          />
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-t from-[#030303] via-transparent to-[#030303]/80" />
         <div className="absolute inset-y-0 right-0 hidden w-px bg-gradient-to-b from-transparent via-line to-transparent lg:block" />
-        <div className="absolute -top-24 right-[-10%] h-72 w-72 rounded-full bg-accent-2/20 blur-[110px]" />
-        <div className="absolute bottom-[-20%] left-[-8%] h-80 w-80 rounded-full bg-accent/20 blur-[120px]" />
       </div>
 
       <motion.div
         className="absolute inset-0 pointer-events-none"
-        style={{ background: reduceMotion ? 'none' : spotlight, opacity: reduceMotion ? 0 : 0.8 }}
+        style={{ background: reduceMotion ? 'none' : spotlight, opacity: reduceMotion ? 0 : 0.6 }}
       />
 
       <motion.div
@@ -126,27 +223,27 @@ export const Hero = () => {
         </div>
 
         <motion.div variants={fadeInUp} style={{ y: reduceMotion ? 0 : y, opacity: reduceMotion ? 1 : opacity }} className="grid gap-6">
-          <div className="rounded-[28px] border border-line/70 bg-bg-elev-1/80 p-6 shadow-card">
+          <div className="rounded-[28px] border border-white/10 bg-bg-elev-1/70 p-6 shadow-[2px_4px_16px_0px_rgba(248,248,248,0.04)_inset] backdrop-blur transition-all duration-500 hover:border-accent/40">
             <div className="flex items-center justify-between text-[11px] font-mono uppercase tracking-[0.3em] text-text-muted">
               <span>Operational Focus</span>
               <span className="text-text-strong">2025 Focus</span>
             </div>
             <div className="mt-6 grid gap-3 text-sm text-text">
-              <div className="flex items-start gap-3 rounded-2xl border border-line/70 bg-bg/70 px-4 py-3">
+              <div className="flex items-start gap-3 rounded-2xl border border-white/10 bg-bg/60 px-4 py-3 backdrop-blur-sm transition-colors hover:border-accent/40">
                 <Cpu size={16} className="mt-1 text-accent" />
                 <div>
                   <div className="text-text-strong">AI infrastructure</div>
                   <div className="text-xs text-text-muted">RAG, evals, observability</div>
                 </div>
               </div>
-              <div className="flex items-start gap-3 rounded-2xl border border-line/70 bg-bg/70 px-4 py-3">
+              <div className="flex items-start gap-3 rounded-2xl border border-white/10 bg-bg/60 px-4 py-3 backdrop-blur-sm transition-colors hover:border-accent/40">
                 <Shield size={16} className="mt-1 text-accent-2" />
                 <div>
                   <div className="text-text-strong">Secure systems</div>
                   <div className="text-xs text-text-muted">Threat-aware architecture</div>
                 </div>
               </div>
-              <div className="flex items-start gap-3 rounded-2xl border border-line/70 bg-bg/70 px-4 py-3">
+              <div className="flex items-start gap-3 rounded-2xl border border-white/10 bg-bg/60 px-4 py-3 backdrop-blur-sm transition-colors hover:border-accent/40">
                 <Sparkles size={16} className="mt-1 text-accent-3" />
                 <div>
                   <div className="text-text-strong">Product delivery</div>
@@ -156,12 +253,12 @@ export const Hero = () => {
             </div>
           </div>
 
-          <div className="rounded-[28px] border border-line/70 bg-bg-elev-2/70 p-6">
+          <div className="rounded-[28px] border border-white/10 bg-bg-elev-2/70 p-6 shadow-[2px_4px_16px_0px_rgba(248,248,248,0.04)_inset] backdrop-blur transition-all duration-500 hover:border-accent/40">
             <div className="flex items-center justify-between text-[11px] font-mono uppercase tracking-[0.3em] text-text-muted">
               <span>Current Signal</span>
               <span className="text-text-strong">Remote / Hybrid</span>
             </div>
-            <div className="mt-6 flex items-center justify-between rounded-2xl border border-line/70 bg-bg/70 px-4 py-4 text-sm text-text">
+            <div className="mt-6 flex items-center justify-between rounded-2xl border border-white/10 bg-bg/60 px-4 py-4 text-sm text-text backdrop-blur-sm transition-colors hover:border-accent/40">
               <div className="flex items-center gap-3">
                 <MapPin size={16} className="text-accent" />
                 <span>Based in Morocco</span>

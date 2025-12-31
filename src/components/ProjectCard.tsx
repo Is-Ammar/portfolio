@@ -24,7 +24,7 @@ export const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
         boxShadow: 'var(--shadow)',
         transition: { duration: DURATION.sm, ease: EASE_OUT }
       }}
-      className="group bg-surface/80 backdrop-blur-sm border border-line/70 flex flex-col h-full rounded-2xl relative overflow-hidden transition-colors shadow-card"
+      className="group bg-bg-elev-1/70 backdrop-blur border border-white/10 flex flex-col h-full rounded-2xl relative overflow-hidden transition-all duration-500 shadow-[2px_4px_16px_0px_rgba(248,248,248,0.04)_inset] hover:border-accent/40"
     >
       {/* Decorative corner accent - animated on hover */}
       <motion.div 

@@ -42,7 +42,7 @@ export const Contact = () => {
           </motion.div>
 
           <motion.div variants={fadeInUp} className="flex flex-col justify-end items-start lg:items-end">
-            <div className="w-full rounded-[28px] border border-line/70 bg-bg-elev-2/70 p-6 shadow-card">
+            <div className="w-full rounded-[28px] border border-white/10 bg-bg-elev-2/70 p-6 shadow-[2px_4px_16px_0px_rgba(248,248,248,0.04)_inset] backdrop-blur transition-all duration-500 hover:border-accent/40">
               <div className="mb-6 text-[11px] font-mono uppercase tracking-[0.3em] text-text-muted">Direct links</div>
               <div className="flex flex-col gap-5">
                 <a

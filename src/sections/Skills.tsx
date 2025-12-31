@@ -131,7 +131,7 @@ export const Skills = () => {
                 variants={fadeInUp}
                 whileHover={{ y: -6 }}
                 transition={{ duration: DURATION.sm, ease: EASE_OUT }}
-                className="group relative overflow-hidden rounded-[26px] border border-line/70 bg-bg-elev-1/80 p-6 shadow-card transition-colors hover:bg-bg-elev-1/90"
+                className="group relative overflow-hidden rounded-[26px] border border-white/10 bg-bg-elev-1/70 p-6 shadow-[2px_4px_16px_0px_rgba(248,248,248,0.04)_inset] backdrop-blur transition-all duration-500 hover:border-accent/40"
               >
                 <div className="absolute inset-0 pointer-events-none">
                   <div className={`absolute -inset-0.5 opacity-0 transition-opacity duration-500 group-hover:opacity-100 bg-gradient-to-br ${glow}`} />
@@ -157,9 +157,9 @@ export const Skills = () => {
                           whileHover={{ y: -2 }}
                           whileDrag={{ scale: 1.03, boxShadow: 'var(--glow)' }}
                           transition={{ duration: DURATION.xs, ease: EASE_OUT }}
-                          className="group/skill relative flex items-center gap-3 rounded-2xl border border-line/70 bg-bg/70 px-3 py-2 text-sm font-mono text-text-muted backdrop-blur-sm cursor-grab active:cursor-grabbing transition-colors"
-                        >
-                          <span className="flex h-8 w-8 items-center justify-center rounded-xl border border-line-strong/60 bg-bg-elev-2/80 text-accent transition-colors group-hover/skill:border-accent/50 group-hover/skill:bg-accent group-hover/skill:text-bg">
+                        className="group/skill relative flex items-center gap-3 rounded-2xl border border-white/10 bg-bg/60 px-3 py-2 text-sm font-mono text-text-muted backdrop-blur-sm cursor-grab active:cursor-grabbing transition-colors"
+                      >
+                          <span className="flex h-8 w-8 items-center justify-center rounded-xl border border-white/10 bg-bg-elev-2/70 text-accent transition-colors group-hover/skill:border-accent/50 group-hover/skill:bg-accent group-hover/skill:text-bg">
                             <Icon size={16} />
                           </span>
                           <span className="transition-colors group-hover/skill:text-text-strong">{skill}</span>
