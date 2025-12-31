@@ -26,8 +26,8 @@ const ScrambleText = ({ text, className }: { text: string; className?: string })
           .join("")
       );
       if (iterations >= text.length) clearInterval(interval);
-      iterations += 1 / 3;
-    }, 30);
+      iterations += 1 / 5;
+    }, 45);
     return () => clearInterval(interval);
   }, [text, reduceMotion]);
 
@@ -36,7 +36,7 @@ const ScrambleText = ({ text, className }: { text: string; className?: string })
 
 const ElegantShape = ({
   className = '',
-  delay = 0,
+  delay = 1,
   width = 400,
   height = 100,
   rotate = 0,
@@ -63,7 +63,7 @@ const ElegantShape = ({
         reduceMotion
           ? undefined
           : {
-              duration: 2.4,
+              duration: 10,
               delay,
               ease: [0.23, 0.86, 0.39, 0.96],
               opacity: { duration: 1.2 },
@@ -223,27 +223,27 @@ export const Hero = () => {
         </div>
 
         <motion.div variants={fadeInUp} style={{ y: reduceMotion ? 0 : y, opacity: reduceMotion ? 1 : opacity }} className="grid gap-6">
-          <div className="rounded-[28px] border border-white/10 bg-bg-elev-1/70 p-6 shadow-[2px_4px_16px_0px_rgba(248,248,248,0.04)_inset] backdrop-blur transition-all duration-500 hover:border-accent/40">
+          <div className="rounded-[28px] border border-white/10 bg-bg-elev-1/70 p-6 shadow-[2px_4px_16px_0px_rgba(248,248,248,0.04)_inset] backdrop-blur transition-all duration-500">
             <div className="flex items-center justify-between text-[11px] font-mono uppercase tracking-[0.3em] text-text-muted">
               <span>Operational Focus</span>
               <span className="text-text-strong">2025 Focus</span>
             </div>
             <div className="mt-6 grid gap-3 text-sm text-text">
-              <div className="flex items-start gap-3 rounded-2xl border border-white/10 bg-bg/60 px-4 py-3 backdrop-blur-sm transition-colors hover:border-accent/40">
+              <div className="flex items-start gap-3 rounded-2xl border border-white/10 bg-bg/60 px-4 py-3 backdrop-blur-sm transition-colors">
                 <Cpu size={16} className="mt-1 text-accent" />
                 <div>
                   <div className="text-text-strong">AI infrastructure</div>
                   <div className="text-xs text-text-muted">RAG, evals, observability</div>
                 </div>
               </div>
-              <div className="flex items-start gap-3 rounded-2xl border border-white/10 bg-bg/60 px-4 py-3 backdrop-blur-sm transition-colors hover:border-accent/40">
+              <div className="flex items-start gap-3 rounded-2xl border border-white/10 bg-bg/60 px-4 py-3 backdrop-blur-sm transition-colors">
                 <Shield size={16} className="mt-1 text-accent-2" />
                 <div>
                   <div className="text-text-strong">Secure systems</div>
                   <div className="text-xs text-text-muted">Threat-aware architecture</div>
                 </div>
               </div>
-              <div className="flex items-start gap-3 rounded-2xl border border-white/10 bg-bg/60 px-4 py-3 backdrop-blur-sm transition-colors hover:border-accent/40">
+              <div className="flex items-start gap-3 rounded-2xl border border-white/10 bg-bg/60 px-4 py-3 backdrop-blur-sm transition-colors">
                 <Sparkles size={16} className="mt-1 text-accent-3" />
                 <div>
                   <div className="text-text-strong">Product delivery</div>
@@ -253,12 +253,12 @@ export const Hero = () => {
             </div>
           </div>
 
-          <div className="rounded-[28px] border border-white/10 bg-bg-elev-2/70 p-6 shadow-[2px_4px_16px_0px_rgba(248,248,248,0.04)_inset] backdrop-blur transition-all duration-500 hover:border-accent/40">
+          <div className="rounded-[28px] border border-white/10 bg-bg-elev-2/70 p-6 shadow-[2px_4px_16px_0px_rgba(248,248,248,0.04)_inset] backdrop-blur transition-all duration-500">
             <div className="flex items-center justify-between text-[11px] font-mono uppercase tracking-[0.3em] text-text-muted">
               <span>Current Signal</span>
               <span className="text-text-strong">Remote / Hybrid</span>
             </div>
-            <div className="mt-6 flex items-center justify-between rounded-2xl border border-white/10 bg-bg/60 px-4 py-4 text-sm text-text backdrop-blur-sm transition-colors hover:border-accent/40">
+            <div className="mt-6 flex items-center justify-between rounded-2xl border border-white/10 bg-bg/60 px-4 py-4 text-sm text-text backdrop-blur-sm transition-colors">
               <div className="flex items-center gap-3">
                 <MapPin size={16} className="text-accent" />
                 <span>Based in Morocco</span>

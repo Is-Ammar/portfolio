@@ -34,14 +34,14 @@ export const About = () => {
             </p>
 
             <div className="grid gap-4 pt-4 sm:grid-cols-2">
-              <div className="rounded-[24px] border border-white/10 bg-bg-elev-1/70 px-5 py-4 shadow-[2px_4px_16px_0px_rgba(248,248,248,0.04)_inset] backdrop-blur transition-all duration-500 hover:border-accent/40">
+              <div className="rounded-[24px] border border-white/10 bg-bg-elev-1/70 px-5 py-4 shadow-[2px_4px_16px_0px_rgba(248,248,248,0.04)_inset] backdrop-blur transition-all duration-500">
                 <h4 className="font-mono text-[11px] uppercase tracking-[0.3em] text-text-muted mb-3">Primary Focus</h4>
                 <ul className="space-y-1 text-sm text-text-strong">
                   <li>AI Systems Engineering</li>
                   <li>High-Performance Web</li>
                 </ul>
               </div>
-              <div className="rounded-[24px] border border-white/10 bg-bg-elev-1/70 px-5 py-4 shadow-[2px_4px_16px_0px_rgba(248,248,248,0.04)_inset] backdrop-blur transition-all duration-500 hover:border-accent/40">
+              <div className="rounded-[24px] border border-white/10 bg-bg-elev-1/70 px-5 py-4 shadow-[2px_4px_16px_0px_rgba(248,248,248,0.04)_inset] backdrop-blur transition-all duration-500">
                 <h4 className="font-mono text-[11px] uppercase tracking-[0.3em] text-text-muted mb-3">Location</h4>
                 <div className="text-sm text-text-strong">Based in Morocco</div>
                 <div className="text-sm text-text-muted">Available Remote</div>
@@ -50,7 +50,7 @@ export const About = () => {
           </motion.div>
 
           <motion.div variants={fadeInUp}>
-            <div className="relative rounded-[28px] border border-white/10 bg-bg-elev-1/70 p-8 shadow-[2px_4px_16px_0px_rgba(248,248,248,0.04)_inset] backdrop-blur transition-all duration-500 hover:border-accent/40">
+            <div className="relative rounded-[28px] border border-white/10 bg-bg-elev-1/70 p-8 shadow-[2px_4px_16px_0px_rgba(248,248,248,0.04)_inset] backdrop-blur transition-all duration-500">
               <div className="absolute top-0 right-0 p-3">
                 <div className="flex gap-1">
                   <div className="h-1.5 w-1.5 rounded-full bg-text-muted" />

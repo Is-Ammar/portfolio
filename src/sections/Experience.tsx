@@ -173,7 +173,7 @@ const ExperienceEntry = ({
           {exp.company}
         </motion.div>
 
-        <div className="relative rounded-[28px] border border-white/10 bg-bg-elev-1/70 p-6 shadow-[2px_4px_16px_0px_rgba(248,248,248,0.04)_inset] backdrop-blur transition-all duration-500 group-hover:border-accent/40">
+        <div className="relative rounded-[28px] border border-white/10 bg-bg-elev-1/70 p-6 shadow-[2px_4px_16px_0px_rgba(248,248,248,0.04)_inset] backdrop-blur transition-all duration-500">
           <div className="absolute top-0 right-0 h-2 w-2 border-t border-r border-accent/50 opacity-0 transition-opacity group-hover:opacity-100" />
 
           <h3 className="mb-2 text-xl font-display font-semibold text-text-strong">

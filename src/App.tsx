@@ -70,9 +70,6 @@ const App = () => {
         preset="smooth"
       />
       
-      {/* Noise Overlay */}
-      <div className="bg-noise"></div>
-      
       <NavBar />
       <main className="relative z-10">
         <Hero />

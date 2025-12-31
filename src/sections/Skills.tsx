@@ -131,7 +131,7 @@ export const Skills = () => {
                 variants={fadeInUp}
                 whileHover={{ y: -6 }}
                 transition={{ duration: DURATION.sm, ease: EASE_OUT }}
-                className="group relative overflow-hidden rounded-[26px] border border-white/10 bg-bg-elev-1/70 p-6 shadow-[2px_4px_16px_0px_rgba(248,248,248,0.04)_inset] backdrop-blur transition-all duration-500 hover:border-accent/40"
+                className="group relative overflow-hidden rounded-[26px] border border-white/10 bg-bg-elev-1/70 p-6 shadow-[2px_4px_16px_0px_rgba(248,248,248,0.04)_inset] backdrop-blur transition-all duration-500"
               >
                 <div className="absolute inset-0 pointer-events-none">
                   <div className={`absolute -inset-0.5 opacity-0 transition-opacity duration-500 group-hover:opacity-100 bg-gradient-to-br ${glow}`} />
