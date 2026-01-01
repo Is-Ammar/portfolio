@@ -90,7 +90,9 @@ export const Hero = () => {
             <ButtonGlitch href="#work" primary>
               View Selected Work
             </ButtonGlitch>
-            <ButtonGlitch href={SOCIALS.resume}>Download Resume</ButtonGlitch>
+            <ButtonGlitch href={SOCIALS.resume} download="Ismail-Ammar-Resume.pdf">
+              Download Resume
+            </ButtonGlitch>
           </motion.div>
         </div>
 
@@ -158,12 +160,23 @@ export const Hero = () => {
   );
 };
 
-const ButtonGlitch = ({ children, href, primary = false }: { children: React.ReactNode; href: string; primary?: boolean }) => {
+const ButtonGlitch = ({
+  children,
+  href,
+  primary = false,
+  download,
+}: {
+  children: React.ReactNode;
+  href: string;
+  primary?: boolean;
+  download?: string;
+}) => {
   const reduceMotion = useReducedMotion();
 
   return (
     <motion.a
       href={href}
+      download={download}
       className={`group relative inline-flex items-center gap-3 overflow-hidden rounded-full border px-6 py-3 font-mono text-[11px] uppercase tracking-[0.3em] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/60 focus-visible:ring-offset-2 focus-visible:ring-offset-bg ${
         primary
           ? 'border-accent bg-accent text-bg shadow-glow'

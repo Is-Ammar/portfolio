@@ -118,7 +118,7 @@ function Dock({
   );
 }
 
-function DockItem({ children, className, href, target, rel, ariaLabel, onClick }: any) {
+function DockItem({ children, className, href, target, rel, download, ariaLabel, onClick }: any) {
   const ref = useRef<HTMLDivElement>(null);
   const { distance, magnification, mouseX, spring } = useDock();
   const isHoveredLocal = useMotionValue(0);
@@ -150,7 +150,14 @@ function DockItem({ children, className, href, target, rel, ariaLabel, onClick }
         whileTap={{ scale: 0.9 }}
       >
         {href ? (
-          <a href={href} target={target} rel={rel} aria-label={ariaLabel} className="relative flex h-full w-full items-center justify-center rounded-2xl focus:outline-none">
+          <a
+            href={href}
+            target={target}
+            rel={rel}
+            download={download}
+            aria-label={ariaLabel}
+            className="relative flex h-full w-full items-center justify-center rounded-2xl focus:outline-none"
+          >
             {Children.map(children, (child) => cloneElement(child as React.ReactElement, { size, isHoveredLocal }))}
           </a>
         ) : (
@@ -219,7 +226,7 @@ export const NavBar = () => {
     { label: "Work", icon: <Briefcase size="100%" />, href: "#work" },
     { label: "Stack", icon: <Layers size="100%" />, href: "#skills" },
     { label: "Contact", icon: <Mail size="100%" />, href: "#contact" },
-    { label: "Resume", icon: <Download size="100%" />, href: SOCIALS.resume, accent: true },
+    { label: "Resume", icon: <Download size="100%" />, href: SOCIALS.resume, accent: true, target: "_blank", rel: "noopener noreferrer" },
   ];
 
   useEffect(() => {
@@ -346,7 +353,7 @@ export const NavBar = () => {
             <div className="pointer-events-auto">
               <Dock magnification={95} distance={180} panelHeight={72}>
                 {items.map((item, i) => (
-                  <DockItem key={i} href={item.href}>
+                  <DockItem key={i} href={item.href} target={item.target} rel={item.rel} download={item.download}>
                     <DockLabel>{item.label}</DockLabel>
                     <DockIcon className={cn(BASE_ICON, item.special && SPECIAL_ICON, item.accent && ACCENT_ICON)}>
                       {typeof item.icon === 'string' ? <span className="font-mono text-[10px] tracking-[0.2em]">{item.icon}</span> : item.icon}
