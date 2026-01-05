@@ -18,7 +18,7 @@ import {
   type MotionValue,
   type SpringOptions,
 } from 'framer-motion';
-import { ArrowRight, Briefcase, Download, Layers, Mail, Menu, User, X } from 'lucide-react';
+import { ArrowRight, Briefcase, Download, FileText, Layers, Mail, Menu, User, X } from 'lucide-react';
 import { SOCIALS } from '../constants';
 import { DURATION, EASE_OUT } from '../utils/motion';
 import { ProgressiveBlur } from './ProgressiveBlur';
@@ -224,6 +224,7 @@ export const NavBar = () => {
     { label: "Home", icon: "IA", href: "#", special: true },
     { label: "About", icon: <User size="100%" />, href: "#about" },
     { label: "Work", icon: <Briefcase size="100%" />, href: "#work" },
+    { label: "Writeups", icon: <FileText size="100%" />, href: "#writeups" },
     { label: "Stack", icon: <Layers size="100%" />, href: "#skills" },
     { label: "Contact", icon: <Mail size="100%" />, href: "#contact" },
     { label: "Resume", icon: <Download size="100%" />, href: SOCIALS.resume, accent: true, target: "_blank", rel: "noopener noreferrer" },
@@ -290,6 +291,7 @@ export const NavBar = () => {
               <div className="hidden items-center gap-10 font-mono text-[11px] uppercase tracking-widest text-text-muted md:flex">
                 <a href="#about" className="rounded-full px-2 py-1 transition-colors hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/60 focus-visible:ring-offset-2 focus-visible:ring-offset-bg">About</a>
                 <a href="#work" className="rounded-full px-2 py-1 transition-colors hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/60 focus-visible:ring-offset-2 focus-visible:ring-offset-bg">Work</a>
+                <a href="#writeups" className="rounded-full px-2 py-1 transition-colors hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/60 focus-visible:ring-offset-2 focus-visible:ring-offset-bg">Writeups</a>
                 <a href="#skills" className="rounded-full px-2 py-1 transition-colors hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/60 focus-visible:ring-offset-2 focus-visible:ring-offset-bg">Stack</a>
                 <a href="#contact" className="rounded-full px-2 py-1 transition-colors hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/60 focus-visible:ring-offset-2 focus-visible:ring-offset-bg">Contact</a>
                 <a
@@ -323,6 +325,7 @@ export const NavBar = () => {
                   <div className="grid gap-5 px-6 py-6 font-mono text-xs uppercase tracking-widest text-text-muted">
                     <a href="#about" className="rounded-full px-3 py-2 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/60 focus-visible:ring-offset-2 focus-visible:ring-offset-bg" onClick={() => setIsOpen(false)}>About</a>
                     <a href="#work" className="rounded-full px-3 py-2 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/60 focus-visible:ring-offset-2 focus-visible:ring-offset-bg" onClick={() => setIsOpen(false)}>Work</a>
+                    <a href="#writeups" className="rounded-full px-3 py-2 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/60 focus-visible:ring-offset-2 focus-visible:ring-offset-bg" onClick={() => setIsOpen(false)}>Writeups</a>
                     <a href="#skills" className="rounded-full px-3 py-2 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/60 focus-visible:ring-offset-2 focus-visible:ring-offset-bg" onClick={() => setIsOpen(false)}>Stack</a>
                     <a href="#contact" className="rounded-full px-3 py-2 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/60 focus-visible:ring-offset-2 focus-visible:ring-offset-bg" onClick={() => setIsOpen(false)}>Contact</a>
                     <a

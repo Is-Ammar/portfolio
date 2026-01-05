@@ -8,6 +8,7 @@ import { About } from './sections/About';
 import { Skills } from './sections/Skills';
 import { SkillProficiency } from './sections/SkillProficiency';
 import { Work } from './sections/Work';
+import { HTBWriteups } from './sections/HTBWriteups';
 import { Experience } from './sections/Experience';
 import { Contact } from './sections/Contact';
 import GradualBlur from './components/GradualBlur';
@@ -182,6 +183,7 @@ const App = () => {
             <Skills />
             <SkillProficiency />
             <Work />
+            <HTBWriteups />
             <Experience />
             <Contact />
           </main>
