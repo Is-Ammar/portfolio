@@ -1,5 +1,3 @@
-'use client';
-
 import React, { useMemo, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import {
@@ -150,6 +148,13 @@ const ALL_SKILLS = (() => {
   return ordered;
 })();
 
+const comfortLevel = (score: number) => {
+  if (score >= 88) return 'Daily driver';
+  if (score >= 80) return 'Confident';
+  if (score >= 72) return 'Comfortable';
+  return 'Still learning';
+};
+
 const EXTRA_SKILLS = [
   'Secure SDLC',
   'Threat Modeling',
@@ -177,12 +182,6 @@ export const SkillProficiency = () => {
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute -top-24 right-[12%] h-72 w-72 rounded-full bg-accent/15 blur-[140px]" />
         <div className="absolute bottom-0 left-[-6%] h-72 w-72 rounded-full bg-accent-3/15 blur-[140px]" />
-        <motion.div
-          initial={reduceMotion ? { x: 0 } : { x: '-25%' }}
-          animate={reduceMotion ? { x: 0 } : { x: '120%' }}
-          transition={reduceMotion ? { duration: 0 } : { duration: 8, repeat: Infinity, ease: 'linear' }}
-          className="absolute top-12 h-px w-2/3 bg-gradient-to-r from-transparent via-accent-2/40 to-transparent opacity-60"
-        />
       </div>
 
       <motion.div
@@ -207,20 +206,20 @@ export const SkillProficiency = () => {
             <div className="flex flex-wrap items-center gap-3 text-[11px] font-mono uppercase tracking-[0.3em] text-text-muted">
               <span className="flex items-center gap-2 text-text-strong">
                 <span className="h-2 w-2 rounded-full bg-accent shadow-glow" />
-                Secure stack signal report
+                Honest self-assessment
               </span>
               <span className="h-px w-8 bg-line/70" />
-              <span>Reviewed each release</span>
+              <span>Updated as I learn</span>
             </div>
             <p className="mt-6 max-w-2xl text-sm text-text-muted leading-relaxed">
-              A calibrated view of the full-stack and cybersecurity tooling I trust in production. Percentages
-              reflect hands-on delivery, hardening work, and confidence across frontend, backend, and infrastructure.
+              No certifications behind these, just a couple of years of building and breaking things.
+              This is how confident I actually feel with each tool, and it shifts as I use them more.
             </p>
           </div>
           <div className="rounded-[28px] border border-white/10 bg-bg-elev-2/70 p-6 shadow-[2px_4px_16px_0px_rgba(248,248,248,0.04)_inset] backdrop-blur">
             <div className="flex items-center justify-between text-[11px] font-mono uppercase tracking-[0.3em] text-text-muted">
-              <span>Stack coverage</span>
-              <span className="text-text-strong">{ALL_SKILLS.length} capabilities tracked</span>
+              <span>Coverage</span>
+              <span className="text-text-strong">{ALL_SKILLS.length} tools, {SKILLS.length} areas</span>
             </div>
             <div className="mt-6 flex flex-wrap gap-2 text-[10px] font-mono uppercase tracking-[0.3em] text-text-muted">
               {SKILLS.map((category) => {
@@ -252,6 +251,7 @@ export const SkillProficiency = () => {
                 key={category.id}
                 type="button"
                 onClick={() => setActiveCategory(category.id)}
+                aria-pressed={isActive}
                 className={cn(
                   'inline-flex items-center gap-2 rounded-full border px-4 py-2 text-[11px] font-mono uppercase tracking-[0.3em] transition-all duration-300',
                   isActive
@@ -305,8 +305,8 @@ export const SkillProficiency = () => {
                   <div className="flex-1">
                     <div className="flex items-center justify-between">
                       <h3 className="text-sm font-semibold text-text-strong">{skill}</h3>
-                      <span className="text-xs font-mono uppercase tracking-[0.2em] text-text-muted">
-                        {proficiency}%
+                      <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-text-muted">
+                        {comfortLevel(proficiency)}
                       </span>
                     </div>
 
@@ -322,7 +322,7 @@ export const SkillProficiency = () => {
                     </div>
 
                     <div className="mt-3 flex items-center justify-between text-[10px] font-mono uppercase tracking-[0.3em] text-text-muted">
-                      <span>Proficiency</span>
+                      <span>Self-rated</span>
                       <span className={tone.label}>{category}</span>
                     </div>
                   </div>
@@ -337,8 +337,8 @@ export const SkillProficiency = () => {
           className="mt-12 rounded-[28px] border border-white/10 bg-bg-elev-2/70 p-6 shadow-[2px_4px_16px_0px_rgba(248,248,248,0.04)_inset] backdrop-blur"
         >
           <div className="mb-6 flex items-center justify-between text-[11px] font-mono uppercase tracking-[0.3em] text-text-muted">
-            <span>Security + delivery practices</span>
-            <span className="text-text-strong">Full-stack readiness</span>
+            <span>Also comfortable with</span>
+            <span className="text-text-strong">Practices & habits</span>
           </div>
           <div className="flex flex-wrap gap-3">
             {EXTRA_SKILLS.map((skill) => (

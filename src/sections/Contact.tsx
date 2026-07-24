@@ -24,26 +24,26 @@ export const Contact = () => {
           <motion.div variants={fadeInUp}>
             <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-line/70 bg-bg-elev-1/80 px-4 py-2 font-mono text-[11px] uppercase tracking-[0.3em] text-accent">
               <span className="h-2 w-2 rounded-full bg-accent animate-pulse motion-reduce:animate-none" />
-              Secure channel open
+              Open to new work
             </div>
             <h3 className="mb-6 text-4xl md:text-5xl font-display font-semibold text-text-strong leading-tight">
-              Let&apos;s build intelligent systems with measurable impact
+              Have a project in mind? Let&apos;s talk
             </h3>
             <p className="mb-10 max-w-xl text-lg leading-relaxed text-text-muted">
-              Available for high-impact contracts and consulting. Expect clear communication, fast delivery,
-              and production-ready outcomes.
+              I take on freelance and consulting work. Email is the fastest way to reach me,
+              and I usually reply within a day.
             </p>
             <a
               href={`mailto:${SOCIALS.email}`}
               className="inline-flex items-center gap-3 rounded-full border border-line-strong/70 bg-bg-elev-1/80 px-6 py-3 text-[11px] font-mono uppercase tracking-[0.3em] text-text-strong transition-all hover:border-accent/60 hover:text-accent hover:shadow-glow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/60 focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
             >
-              <Mail size={16} /> Start a conversation
+              <Mail size={16} /> Send me an email
             </a>
           </motion.div>
 
           <motion.div variants={fadeInUp} className="flex flex-col justify-end items-start lg:items-end">
             <div className="w-full rounded-[28px] border border-white/10 bg-bg-elev-2/70 p-6 shadow-[2px_4px_16px_0px_rgba(248,248,248,0.04)_inset] backdrop-blur transition-all duration-500">
-              <div className="mb-6 text-[11px] font-mono uppercase tracking-[0.3em] text-text-muted">Direct links</div>
+              <div className="mb-6 text-[11px] font-mono uppercase tracking-[0.3em] text-text-muted">Elsewhere</div>
               <div className="flex flex-col gap-5">
                 <a
                   href={SOCIALS.github}

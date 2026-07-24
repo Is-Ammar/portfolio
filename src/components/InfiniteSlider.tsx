@@ -1,5 +1,3 @@
-'use client';
-
 import React, { Children, cloneElement, useEffect, useRef, useState } from 'react';
 import { animate, motion, useMotionValue, useReducedMotion } from 'framer-motion';
 
@@ -119,6 +117,16 @@ export function InfiniteSlider({
       : {};
 
   const items = Children.toArray(children);
+
+  // With reduced motion the strip never scrolls, so wrap items instead of
+  // clipping everything past the first row.
+  if (reduceMotion) {
+    return (
+      <div className={cn('flex flex-wrap', className)} style={{ gap: `${gap}px` }}>
+        {items}
+      </div>
+    );
+  }
 
   return (
     <div className={cn('overflow-hidden', className)}>

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useReducedMotion } from 'framer-motion';
 import { useLenis } from 'lenis/react';
 import { NavBar } from './components/NavBar';
@@ -11,17 +11,15 @@ import { Work } from './sections/Work';
 import { HTBWriteups } from './sections/HTBWriteups';
 import { Experience } from './sections/Experience';
 import { Contact } from './sections/Contact';
-import GradualBlur from './components/GradualBlur';
+import { ViewportBlur } from './components/ViewportBlur';
 import { GlobalBackdrop } from './components/GlobalBackdrop';
-import { WelcomeOverlay } from './components/WelcomeOverlay';
+import { CursorEyes } from './components/CursorEyes';
 
 const App = () => {
   const prefersReducedMotion = useReducedMotion();
   const lenis = useLenis();
   const hasRestoredRef = useRef(false);
-  const [introDone, setIntroDone] = useState(false);
 
-  // Smooth scroll behavior for anchor links
   useEffect(() => {
     document.documentElement.style.scrollBehavior = prefersReducedMotion ? 'auto' : 'smooth';
     return () => {
@@ -29,8 +27,9 @@ const App = () => {
     };
   }, [prefersReducedMotion]);
 
+  // On reload / back-forward, snap to the start of the section the visitor was
+  // reading instead of a half-scrolled position.
   useEffect(() => {
-    if (!introDone) return;
     const getSections = () => Array.from(document.querySelectorAll<HTMLElement>('main section'));
 
     const getSectionTop = (section: HTMLElement) => section.getBoundingClientRect().top + window.scrollY;
@@ -128,13 +127,19 @@ const App = () => {
       window.removeEventListener('pagehide', storeCurrentSection);
       window.removeEventListener('beforeunload', storeCurrentSection);
     };
-  }, [introDone, lenis, prefersReducedMotion]);
+  }, [lenis, prefersReducedMotion]);
 
+  // Feed the pointer position to the .glow-card CSS, throttled to one
+  // style write per frame.
   useEffect(() => {
     const root = document.documentElement;
+    let frame = 0;
+    let lastEvent: { clientX: number; clientY: number } | null = null;
 
-    const updatePointer = (event: PointerEvent) => {
-      const { clientX, clientY } = event;
+    const applyPointer = () => {
+      frame = 0;
+      if (!lastEvent) return;
+      const { clientX, clientY } = lastEvent;
       const width = window.innerWidth || 1;
       const height = window.innerHeight || 1;
 
@@ -144,52 +149,38 @@ const App = () => {
       root.style.setProperty('--glow-yp', (clientY / height).toFixed(2));
     };
 
-    updatePointer({
-      clientX: window.innerWidth / 2,
-      clientY: window.innerHeight / 2,
-    } as PointerEvent);
+    const updatePointer = (event: PointerEvent) => {
+      lastEvent = event;
+      if (!frame) frame = requestAnimationFrame(applyPointer);
+    };
+
+    lastEvent = { clientX: window.innerWidth / 2, clientY: window.innerHeight / 2 };
+    applyPointer();
 
     window.addEventListener('pointermove', updatePointer, { passive: true });
-    return () => window.removeEventListener('pointermove', updatePointer);
+    return () => {
+      if (frame) cancelAnimationFrame(frame);
+      window.removeEventListener('pointermove', updatePointer);
+    };
   }, []);
 
   return (
     <div className="min-h-screen w-full relative text-text selection:bg-accent selection:text-bg overflow-x-hidden font-body">
-      <WelcomeOverlay onFinish={() => setIntroDone(true)} />
-      {introDone && (
-        <>
-          <GlobalBackdrop />
-
-          {/* Cinematic Viewport Blur Effects */}
-          <GradualBlur
-            target="page"
-            position="bottom"
-            height="12rem"
-            responsive={true}
-            mobileHeight="9rem"
-            tabletHeight="10rem"
-            desktopHeight="12rem"
-            strength={2}
-            divCount={8}
-            zIndex={50}
-            opacity={1}
-            preset="smooth"
-          />
-
-          <NavBar />
-          <main className="relative z-10">
-            <Hero />
-            <About />
-            <Skills />
-            <SkillProficiency />
-            <Work />
-            <HTBWriteups />
-            <Experience />
-            <Contact />
-          </main>
-          <Footer />
-        </>
-      )}
+      <GlobalBackdrop />
+      <ViewportBlur />
+      <NavBar />
+      <CursorEyes />
+      <main className="relative z-10">
+        <Hero />
+        <About />
+        <Skills />
+        <SkillProficiency />
+        <Work />
+        <HTBWriteups />
+        <Experience />
+        <Contact />
+      </main>
+      <Footer />
     </div>
   );
 };

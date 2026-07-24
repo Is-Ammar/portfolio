@@ -1,12 +1,36 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { useLenis } from 'lenis/react';
 import { AlertTriangle, ArrowUpRight, FileText, Terminal, X } from 'lucide-react';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { DURATION, EASE_OUT, fadeInUp, revealLine, staggerContainer } from '../utils/motion';
+
+// The markdown + syntax highlighting bundle is heavy, so it only loads
+// once a writeup is actually opened.
+const WriteupMarkdown = lazy(() => import('../components/WriteupMarkdown'));
+
+// If the lazy chunk fails to load (offline, or a stale deploy), show a
+// message inside the modal instead of letting the error unmount the app.
+class MarkdownErrorBoundary extends React.Component<
+  { children: React.ReactNode },
+  { hasError: boolean }
+> {
+  state = { hasError: false };
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="rounded-[20px] border border-accent-2/40 bg-accent-2/10 p-4 text-sm text-text-muted">
+          Couldn&apos;t load the reader. Refresh the page, or use the GitHub link below.
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
 
 const API_ROOT = 'https://api.github.com/repos/Is-Ammar/writeups/contents';
 const CACHE_KEY = 'htb-writeups-cache-v1';
@@ -185,6 +209,7 @@ export const HTBWriteups = () => {
   const [error, setError] = useState<string | null>(null);
   const [refreshToken, setRefreshToken] = useState(0);
   const [selectedWriteup, setSelectedWriteup] = useState<WriteupItem | null>(null);
+  const dialogRef = useRef<HTMLDivElement | null>(null);
   const [contentMap, setContentMap] = useState<Record<string, string>>({});
   const [contentError, setContentError] = useState<string | null>(null);
   const [isContentLoading, setIsContentLoading] = useState(false);
@@ -277,6 +302,12 @@ export const HTBWriteups = () => {
     return () => controller.abort();
   }, [loadWriteups, refreshToken]);
 
+  // Clear any error left behind by a previous writeup so cached content
+  // renders instead of a stale failure message.
+  useEffect(() => {
+    setContentError(null);
+  }, [selectedWriteup]);
+
   useEffect(() => {
     if (!selectedWriteup) return;
     const hasContent = Object.prototype.hasOwnProperty.call(contentMap, selectedWriteup.path);
@@ -306,15 +337,47 @@ export const HTBWriteups = () => {
     return () => controller.abort();
   }, [contentMap, selectedWriteup]);
 
+  // Keyboard handling for the dialog: Escape closes, Tab stays inside,
+  // and focus returns to wherever it was once the dialog closes.
   useEffect(() => {
     if (!selectedWriteup) return undefined;
+    const previouslyFocused = document.activeElement as HTMLElement | null;
+    dialogRef.current?.focus();
+
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         setSelectedWriteup(null);
+        return;
+      }
+      if (event.key !== 'Tab') return;
+
+      const dialog = dialogRef.current;
+      if (!dialog) return;
+      const focusable = dialog.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      );
+      if (!focusable.length) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      const active = document.activeElement;
+
+      if (event.shiftKey) {
+        if (active === first || !dialog.contains(active)) {
+          event.preventDefault();
+          last.focus();
+        }
+      } else if (active === last || !dialog.contains(active)) {
+        event.preventDefault();
+        first.focus();
       }
     };
+
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      previouslyFocused?.focus?.();
+    };
   }, [selectedWriteup]);
 
   useEffect(() => {
@@ -348,12 +411,6 @@ export const HTBWriteups = () => {
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute -top-20 right-[8%] h-72 w-72 rounded-full bg-accent/18 blur-[140px]" />
         <div className="absolute bottom-0 left-[10%] h-72 w-72 rounded-full bg-accent-3/18 blur-[140px]" />
-        <motion.div
-          initial={reduceMotion ? { x: 0 } : { x: '-20%' }}
-          animate={reduceMotion ? { x: 0 } : { x: '120%' }}
-          transition={reduceMotion ? { duration: 0 } : { duration: 8, repeat: Infinity, ease: 'linear' }}
-          className="absolute top-16 h-px w-1/2 bg-gradient-to-r from-transparent via-accent/50 to-transparent opacity-50"
-        />
       </div>
 
       <motion.div
@@ -378,21 +435,21 @@ export const HTBWriteups = () => {
             <div className="flex flex-wrap items-center gap-3 text-[11px] font-mono uppercase tracking-[0.3em] text-text-muted">
               <span className="flex items-center gap-2 text-text-strong">
                 <Terminal size={12} className="text-accent" />
-                Encrypted lab archives
+                Hack The Box & CTF notes
               </span>
               <span className="h-px w-8 bg-line/70" />
-              <span>Active writeup stream</span>
+              <span>Pulled live from GitHub</span>
             </div>
             <p className="mt-6 max-w-2xl text-sm leading-relaxed text-text-muted">
-              Field notes and debriefs extracted from Hack The Box engagements. Each file opens in a secure
-              reader with syntax-aware rendering for quick review.
+              Notes I take while working through Hack The Box machines and web challenges, synced straight
+              from my writeups repo. Click any file to read it here.
             </p>
           </div>
           <div className="rounded-[28px] border border-white/10 bg-bg-elev-2/70 p-6 shadow-[2px_4px_16px_0px_rgba(248,248,248,0.04)_inset] backdrop-blur">
             <div className="flex items-center justify-between text-[11px] font-mono uppercase tracking-[0.3em] text-text-muted">
-              <span>Archive status</span>
+              <span>Repository</span>
               <span className="text-text-strong">
-                {showLoading ? 'Syncing...' : isRefreshing ? 'Refreshing...' : `${totalCount} files`}
+                {showLoading ? 'Loading...' : isRefreshing ? 'Refreshing...' : `${totalCount} files`}
               </span>
             </div>
             <div className="mt-6 flex flex-wrap gap-2 text-[10px] font-mono uppercase tracking-[0.3em] text-text-muted">
@@ -439,17 +496,17 @@ export const HTBWriteups = () => {
           >
             <div className="flex flex-wrap items-center gap-3 text-[11px] font-mono uppercase tracking-[0.3em] text-accent-2">
               <AlertTriangle size={14} />
-              GitHub sync failed
+              Couldn&apos;t reach GitHub
             </div>
             <p className="mt-4 text-sm text-text-muted">
-              {error} Refresh the stream or retry in a few seconds.
+              {error} Give it a few seconds and try again.
             </p>
             <button
               type="button"
               onClick={() => setRefreshToken((prev) => prev + 1)}
               className="mt-6 inline-flex items-center gap-2 rounded-full border border-accent-2/40 bg-bg/60 px-4 py-2 text-[11px] font-mono uppercase tracking-[0.3em] text-accent-2 transition-all hover:border-accent-2/70 hover:text-accent-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/60 focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
             >
-              Retry sync
+              Try again
             </button>
           </motion.div>
         )}
@@ -506,7 +563,7 @@ export const HTBWriteups = () => {
                     <div className="mt-auto flex items-center justify-between gap-4 border-t border-line/60 pt-4 text-[10px] font-mono uppercase tracking-[0.3em] text-text-muted">
                       <span className="flex items-center gap-2">
                         <span className="h-1.5 w-1.5 rounded-full bg-accent" />
-                        Decrypt file
+                        Read writeup
                       </span>
                       <span>{formatSize(writeup.size)}</span>
                     </div>
@@ -528,11 +585,13 @@ export const HTBWriteups = () => {
             onClick={() => setSelectedWriteup(null)}
           >
             <motion.div
+              ref={dialogRef}
+              tabIndex={-1}
               initial={{ opacity: 0, y: 20, scale: 0.98 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 10, scale: 0.98 }}
               transition={{ duration: DURATION.sm, ease: EASE_OUT }}
-              className="relative w-full max-w-4xl overflow-hidden rounded-[28px] border border-white/10 bg-bg-elev-2/95 shadow-[0_24px_70px_rgba(0,0,0,0.6)] backdrop-blur"
+              className="relative w-full max-w-4xl overflow-hidden rounded-[28px] border border-white/10 bg-bg-elev-2/95 shadow-[0_24px_70px_rgba(0,0,0,0.6)] backdrop-blur focus:outline-none"
               onClick={(event) => event.stopPropagation()}
               role="dialog"
               aria-modal="true"
@@ -543,7 +602,7 @@ export const HTBWriteups = () => {
                 <div className="sticky top-0 z-10 flex items-center justify-between gap-4 border-b border-line/60 bg-bg/80 px-6 py-4 backdrop-blur">
                   <div>
                     <div className="text-[10px] font-mono uppercase tracking-[0.3em] text-text-muted">
-                      Decrypted file
+                      Writeup
                     </div>
                     <h3 className="text-xl font-semibold text-text-strong">
                       {selectedWriteup.title}
@@ -578,89 +637,19 @@ export const HTBWriteups = () => {
                   )}
 
                   {!isContentLoading && !contentError && (
-                    <ReactMarkdown
-                      remarkPlugins={[remarkGfm]}
-                      components={{
-                        h1: ({ children }) => (
-                          <h1 className="text-2xl font-semibold text-text-strong mb-4">{children}</h1>
-                        ),
-                        h2: ({ children }) => (
-                          <h2 className="text-xl font-semibold text-text-strong mt-6 mb-3">{children}</h2>
-                        ),
-                        h3: ({ children }) => (
-                          <h3 className="text-lg font-semibold text-text-strong mt-6 mb-3">{children}</h3>
-                        ),
-                        p: ({ children }) => (
-                          <p className="text-sm leading-relaxed text-text-muted mb-4">{children}</p>
-                        ),
-                        ul: ({ children }) => (
-                          <ul className="mb-4 list-disc space-y-2 pl-5 text-sm text-text-muted">{children}</ul>
-                        ),
-                        ol: ({ children }) => (
-                          <ol className="mb-4 list-decimal space-y-2 pl-5 text-sm text-text-muted">{children}</ol>
-                        ),
-                        li: ({ children }) => <li className="leading-relaxed">{children}</li>,
-                        blockquote: ({ children }) => (
-                          <blockquote className="border-l-2 border-accent/50 bg-bg/40 px-4 py-3 text-sm text-text-muted">
-                            {children}
-                          </blockquote>
-                        ),
-                        a: ({ href, children }) => (
-                          <a
-                            href={href}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="text-accent underline-offset-4 hover:underline"
-                          >
-                            {children}
-                          </a>
-                        ),
-                        table: ({ children }) => (
-                          <div className="mb-6 overflow-x-auto">
-                            <table className="w-full border border-line/60 text-sm text-text-muted">
-                              {children}
-                            </table>
+                    <MarkdownErrorBoundary>
+                      <Suspense
+                        fallback={
+                          <div className="space-y-4 animate-pulse">
+                            {Array.from({ length: 6 }).map((_, index) => (
+                              <div key={`md-skeleton-${index}`} className="h-4 w-full rounded-full bg-line/70" />
+                            ))}
                           </div>
-                        ),
-                        th: ({ children }) => (
-                          <th className="border border-line/60 bg-bg/60 px-3 py-2 text-left text-text-strong">
-                            {children}
-                          </th>
-                        ),
-                        td: ({ children }) => (
-                          <td className="border border-line/60 px-3 py-2">{children}</td>
-                        ),
-                        code: ({ node: _node, className, children, ...props }) => {
-                          const match = /language-(\w+)/.exec(className ?? '');
-                          const inline = !match;
-                          if (!inline) {
-                            return (
-                              <SyntaxHighlighter
-                                {...props}
-                                style={vscDarkPlus}
-                                language={match?.[1] ?? 'text'}
-                                PreTag="div"
-                                customStyle={{
-                                  background: 'rgba(5, 6, 10, 0.9)',
-                                  borderRadius: '18px',
-                                  padding: '16px',
-                                  fontSize: '13px',
-                                }}
-                              >
-                                {String(children).replace(/\n$/, '')}
-                              </SyntaxHighlighter>
-                            );
-                          }
-                          return (
-                            <code className="rounded bg-bg/70 px-1.5 py-0.5 text-[12px] font-mono text-text-strong">
-                              {children}
-                            </code>
-                          );
-                        },
-                      }}
-                    >
-                      {activeContent}
-                    </ReactMarkdown>
+                        }
+                      >
+                        <WriteupMarkdown content={activeContent ?? ''} />
+                      </Suspense>
+                    </MarkdownErrorBoundary>
                   )}
                 </div>
 
@@ -671,7 +660,7 @@ export const HTBWriteups = () => {
                     rel="noreferrer"
                     className="inline-flex items-center gap-2 rounded-full border border-line-strong/70 bg-bg-elev-1/80 px-4 py-2 text-[11px] font-mono uppercase tracking-[0.3em] text-text-strong transition-all hover:border-accent/60 hover:text-accent hover:shadow-glow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/60 focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
                   >
-                    View Raw on GitHub <ArrowUpRight size={14} />
+                    View on GitHub <ArrowUpRight size={14} />
                   </a>
                 </div>
               </div>

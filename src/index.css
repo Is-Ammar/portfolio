@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
   color-scheme: dark;
   --bg: #030303;
@@ -15,11 +19,23 @@
   --line: #1f2330;
   --line-strong: #2b3040;
   --focus: #a5b4fc;
+  /* Channel versions of the palette so Tailwind opacity modifiers
+     (bg-accent/10 etc.) can work. Keep in sync with the hex values above. */
+  --bg-rgb: 3 3 3;
+  --bg-elev-1-rgb: 11 11 19;
+  --bg-elev-2-rgb: 17 18 26;
+  --surface-rgb: 15 17 24;
+  --text-strong-rgb: 245 245 247;
+  --text-rgb: 214 214 222;
+  --text-muted-rgb: 163 163 179;
+  --accent-rgb: 99 102 241;
+  --accent-2-rgb: 244 63 94;
+  --accent-3-rgb: 34 211 238;
+  --line-rgb: 31 35 48;
+  --line-strong-rgb: 43 48 64;
+  --focus-rgb: 165 180 252;
   --shadow: 0 22px 60px rgba(0, 0, 0, 0.6);
   --glow: 0 0 28px color-mix(in srgb, var(--accent) 50%, transparent);
-  --liquid-1: #6366f1;
-  --liquid-2: #f43f5e;
-  --liquid-3: #22d3ee;
   --glow-x: 50;
   --glow-y: 50;
   --glow-xp: 0.5;
@@ -28,11 +44,6 @@
 
 body {
   background-color: var(--bg);
-  background-image:
-    radial-gradient(1200px circle at 10% -10%, color-mix(in srgb, var(--accent) 12%, transparent), transparent 60%),
-    radial-gradient(1000px circle at 92% 12%, color-mix(in srgb, var(--accent-2) 10%, transparent), transparent 60%),
-    radial-gradient(900px circle at 70% 115%, color-mix(in srgb, var(--accent-3) 12%, transparent), transparent 65%),
-    linear-gradient(180deg, #030303 0%, #030303 55%, #090a12 100%);
   color: var(--text);
   font-family: 'IBM Plex Sans', sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -49,7 +60,6 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--bg);
 }
 
-/* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -73,22 +83,13 @@ h1, h2, h3, h4, h5, h6 {
   display: none;
 }
 
-/* Text clamp utility */
-.clamp-3 {
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  line-clamp: 3;
-}
-
-/* Shared section backdrop to mirror hero styling */
 .section-shell {
   position: relative;
   overflow: hidden;
   isolation: isolate;
 }
 
+/* Card border glow that follows the pointer (position fed via --glow-x/--glow-y) */
 .glow-card {
   position: relative;
   isolation: isolate;

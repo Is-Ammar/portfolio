@@ -1,38 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import { ArrowRight, Cpu, MapPin, Shield, Sparkles } from 'lucide-react';
 import { SOCIALS } from '../constants';
+import { NameLetters } from '../components/NameLetters';
 import { DURATION, fadeInUp, staggerContainer } from '../utils/motion';
-
-const ScrambleText = ({ text, className }: { text: string; className?: string }) => {
-  const [display, setDisplay] = useState(text);
-  const chars = "!@#$%^&*()_+-=[]{}|;':,./<>?";
-  const reduceMotion = useReducedMotion();
-
-  useEffect(() => {
-    if (reduceMotion) {
-      setDisplay(text);
-      return;
-    }
-    let iterations = 0;
-    const interval = setInterval(() => {
-      setDisplay(
-        text
-          .split("")
-          .map((letter, index) => {
-            if (index < iterations) return text[index];
-            return chars[Math.floor(Math.random() * chars.length)];
-          })
-          .join("")
-      );
-      if (iterations >= text.length) clearInterval(interval);
-      iterations += 1 / 5;
-    }, 45);
-    return () => clearInterval(interval);
-  }, [text, reduceMotion]);
-
-  return <span className={className}>{display}</span>;
-};
 
 export const Hero = () => {
   const ref = useRef(null);
@@ -57,7 +28,7 @@ export const Hero = () => {
           <motion.div variants={fadeInUp} className="mb-8 flex flex-wrap items-center gap-4 text-[11px] font-mono uppercase tracking-[0.3em] text-text-muted">
             <span className="inline-flex items-center gap-2 rounded-full border border-line-strong/70 bg-bg-elev-1/80 px-4 py-2 text-text-strong">
               <span className="h-2 w-2 rounded-full bg-accent shadow-glow" />
-              Open for select engagements
+              Available for freelance work
             </span>
             <span className="h-px w-10 bg-line/70" />
             <span className="flex items-center gap-2">
@@ -66,23 +37,19 @@ export const Hero = () => {
           </motion.div>
 
           <motion.div variants={fadeInUp} className="overflow-hidden">
-            <h1 className="text-[clamp(3.5rem,9vw,9rem)] font-display font-semibold leading-[0.88] tracking-tight text-text-strong">
-              <ScrambleText text="ISMAIL" /> <br />
-              <span className="text-text-muted">
-                <ScrambleText text="AMMAR" />
-              </span>
-            </h1>
+            <NameLetters />
           </motion.div>
 
           <motion.div variants={fadeInUp} className="mt-8 max-w-2xl space-y-6 text-lg text-text md:text-xl">
             <p className="leading-relaxed">
-              I build resilient full-stack systems with a security-first mindset. From hardened APIs to
-              high-performance interfaces, I ship reliable products with observable, measurable impact.
+              I&apos;m a full-stack developer who cares about security. I spend my days building web apps
+              and APIs, and a lot of evenings breaking things in CTFs with M4SEC. Currently studying at
+              1337 (42 Network) in Rabat.
             </p>
             <div className="flex flex-wrap gap-3 text-[11px] font-mono uppercase tracking-[0.3em] text-text-muted">
-              <span className="rounded-full border border-line/70 bg-bg-elev-1/80 px-4 py-2">AppSec + APIs</span>
-              <span className="rounded-full border border-line/70 bg-bg-elev-1/80 px-4 py-2">Full-Stack Delivery</span>
-              <span className="rounded-full border border-line/70 bg-bg-elev-1/80 px-4 py-2">Secure Systems</span>
+              <span className="rounded-full border border-line/70 bg-bg-elev-1/80 px-4 py-2">Web security</span>
+              <span className="rounded-full border border-line/70 bg-bg-elev-1/80 px-4 py-2">APIs & backends</span>
+              <span className="rounded-full border border-line/70 bg-bg-elev-1/80 px-4 py-2">React frontends</span>
             </div>
           </motion.div>
 
@@ -99,8 +66,8 @@ export const Hero = () => {
         <motion.div variants={fadeInUp} style={{ y: reduceMotion ? 0 : y, opacity: reduceMotion ? 1 : opacity }} className="grid gap-6">
           <div className="rounded-[28px] border border-white/10 bg-bg-elev-1/70 p-6 shadow-[2px_4px_16px_0px_rgba(248,248,248,0.04)_inset] backdrop-blur transition-all duration-500">
             <div className="flex items-center justify-between text-[11px] font-mono uppercase tracking-[0.3em] text-text-muted">
-              <span>Operational Focus</span>
-              <span className="text-text-strong">2025 Focus</span>
+              <span>What I do</span>
+              <span className="text-text-strong">Day to day</span>
             </div>
             <div className="mt-6 grid gap-3 text-sm text-text">
               <div className="flex items-start gap-3 rounded-2xl border border-white/10 bg-bg/60 px-4 py-3 backdrop-blur-sm transition-colors">
@@ -129,8 +96,8 @@ export const Hero = () => {
 
           <div className="rounded-[28px] border border-white/10 bg-bg-elev-2/70 p-6 shadow-[2px_4px_16px_0px_rgba(248,248,248,0.04)_inset] backdrop-blur transition-all duration-500">
             <div className="flex items-center justify-between text-[11px] font-mono uppercase tracking-[0.3em] text-text-muted">
-              <span>Current Signal</span>
-              <span className="text-text-strong">Remote / Hybrid</span>
+              <span>Where I work</span>
+              <span className="text-text-strong">Remote friendly</span>
             </div>
             <div className="mt-6 flex items-center justify-between rounded-2xl border border-white/10 bg-bg/60 px-4 py-4 text-sm text-text backdrop-blur-sm transition-colors">
               <div className="flex items-center gap-3">
@@ -152,9 +119,9 @@ export const Hero = () => {
         <div className="flex items-center gap-4">
           <span>Scroll to explore</span>
           <span className="h-px w-10 bg-line/70" />
-          <span>Selected work + impact</span>
+          <span>Work, writeups, experience</span>
         </div>
-        <div>Built for scale and craft</div>
+        <div>Rabat, Morocco</div>
       </motion.div>
     </section>
   );

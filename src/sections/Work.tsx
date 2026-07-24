@@ -28,8 +28,8 @@ import type { Project } from '../types';
 import { DURATION, EASE_OUT, fadeInUp, staggerContainer, revealLine } from '../utils/motion';
 
 const MAX_VISIBLE = 6;
-type WorkFilter = 'All' | 'Fullstack' | 'Security' | 'Systems' | 'Graphics';
-const FILTERS: WorkFilter[] = ['All', 'Security', 'Fullstack', 'Systems', 'Graphics'];
+type WorkFilter = 'All' | 'Full-Stack' | 'Security' | 'Systems' | 'Graphics';
+const FILTERS: WorkFilter[] = ['All', 'Security', 'Full-Stack', 'Systems', 'Graphics'];
 const cx = (...classes: Array<string | undefined | false | null>) =>
   classes.filter(Boolean).join(' ');
 
@@ -191,7 +191,7 @@ export const Work = () => {
   const filteredProjects = filter === 'All'
     ? PROJECTS
     : PROJECTS.filter((p) => {
-        if (filter === 'Fullstack') {
+        if (filter === 'Full-Stack') {
           return ['Web', 'Software Engineering', 'System', 'Infra', 'DevOps & Utilities'].includes(p.category);
         }
         if (filter === 'Security') return p.category === 'Security';
@@ -308,8 +308,8 @@ export const Work = () => {
               primaryLabel={buttonLabel}
               hoverLabel={buttonHoverLabel}
               onClick={handleToggleShowAll}
-              aria-expanded={showAll}
-              aria-controls="work-grid"
+              ariaExpanded={showAll}
+              ariaControls="work-grid"
             />
           </motion.div>
         )}
@@ -370,9 +370,9 @@ const WorkCard = ({
         </div>
 
         <div className="mb-4">
-          <h4 className="text-xl font-semibold text-text-strong transition-colors group-hover:text-accent">
+          <h3 className="text-xl font-semibold text-text-strong transition-colors group-hover:text-accent">
             {project.title}
-          </h4>
+          </h3>
           <div className="mt-2 text-[11px] font-mono uppercase tracking-[0.3em] text-text-muted">
             {project.role}
           </div>
@@ -434,14 +434,13 @@ const TechOrbit = ({ items, allowMotion }: { items: TechIconItem[]; allowMotion:
                 'flex items-center justify-center rounded-full border border-white/10 bg-white/[0.02] shadow-[0_8px_24px_rgba(0,0,0,0.35)] backdrop-blur-[2px]',
                 TECH_ICON_WRAPPER[sizeKey]
               )}
-              animate={shouldAnimate ? { y: [0, -4, 0], scale: [1, 1.08, 1] } : undefined}
+              animate={shouldAnimate ? { y: [0, -4, 0] } : undefined}
               transition={
                 shouldAnimate
                   ? {
-                      duration: 1.1,
+                      duration: 3.2,
                       repeat: Infinity,
-                      repeatDelay: 1.3,
-                      delay: index * 0.12,
+                      delay: index * 0.35,
                       ease: 'easeInOut',
                     }
                   : undefined
@@ -457,29 +456,27 @@ const TechOrbit = ({ items, allowMotion }: { items: TechIconItem[]; allowMotion:
   );
 };
 
-const SparkleField = ({ allowMotion }: { allowMotion: boolean }) => {
-  const stars = useMemo(
-    () =>
-      Array.from({ length: 12 }).map(() => ({
-        top: Math.random() * 100,
-        left: Math.random() * 100,
-        size: Math.random() > 0.7 ? 3 : 2,
-        delay: Math.random() * 2,
-        duration: 3 + Math.random() * 3,
-      })),
-    []
-  );
-  const tones = ['bg-white/70', 'bg-accent/70', 'bg-accent-2/70', 'bg-accent-3/70'];
-  const shouldAnimate = allowMotion;
+const STARS = [
+  { top: 16, left: 12, size: 2, delay: 0.2, duration: 4.4 },
+  { top: 68, left: 8, size: 3, delay: 1.1, duration: 5.2 },
+  { top: 24, left: 84, size: 2, delay: 0.6, duration: 4.8 },
+  { top: 76, left: 78, size: 2, delay: 1.6, duration: 5.6 },
+  { top: 44, left: 30, size: 2, delay: 0.9, duration: 4.2 },
+  { top: 12, left: 56, size: 3, delay: 1.9, duration: 5.4 },
+  { top: 82, left: 44, size: 2, delay: 0.4, duration: 4.6 },
+  { top: 56, left: 92, size: 2, delay: 1.3, duration: 5.0 },
+];
 
-  if (!shouldAnimate) {
+const STAR_TONES = ['bg-white/70', 'bg-accent/70', 'bg-accent-2/70', 'bg-accent-3/70'];
+
+const SparkleField = ({ allowMotion }: { allowMotion: boolean }) => {
+  if (!allowMotion) {
     return (
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute left-1/2 top-1/2 h-32 w-px -translate-x-1/2 -translate-y-1/2 bg-gradient-to-b from-transparent via-accent-3/60 to-transparent" />
-        {stars.map((star, index) => (
+        {STARS.map((star, index) => (
           <span
             key={`spark-${index}`}
-            className={cx('absolute rounded-full', tones[index % tones.length])}
+            className={cx('absolute rounded-full', STAR_TONES[index % STAR_TONES.length])}
             style={{
               top: `${star.top}%`,
               left: `${star.left}%`,
@@ -495,30 +492,23 @@ const SparkleField = ({ allowMotion }: { allowMotion: boolean }) => {
 
   return (
     <div className="absolute inset-0 pointer-events-none">
-      <motion.div
-        className="absolute left-1/2 top-1/2 h-32 w-px -translate-x-1/2 -translate-y-1/2 bg-gradient-to-b from-transparent via-accent-3/80 to-transparent"
-        animate={{ y: [-10, 10, -10], opacity: [0.4, 0.9, 0.4] }}
-        transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-      />
-      {stars.map((star, index) => (
+      {STARS.map((star, index) => (
         <motion.span
           key={`spark-${index}`}
-          className={cx('absolute rounded-full', tones[index % tones.length])}
+          className={cx('absolute rounded-full', STAR_TONES[index % STAR_TONES.length])}
           style={{
             top: `${star.top}%`,
             left: `${star.left}%`,
             width: `${star.size}px`,
             height: `${star.size}px`,
           }}
-          animate={{ opacity: [0.2, 0.9, 0.2], scale: [1, 1.4, 1] }}
-          transition={
-            {
-              duration: star.duration,
-              repeat: Infinity,
-              delay: star.delay,
-              ease: 'easeInOut',
-            }
-          }
+          animate={{ opacity: [0.2, 0.8, 0.2] }}
+          transition={{
+            duration: star.duration,
+            repeat: Infinity,
+            delay: star.delay,
+            ease: 'easeInOut',
+          }}
         />
       ))}
     </div>

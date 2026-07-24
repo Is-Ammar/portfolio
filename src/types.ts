@@ -9,7 +9,6 @@ export interface Project {
   github?: string;
   featured: boolean;
   category: 'Web' | 'System' | 'Infra' | 'Security' | 'Software Engineering' | 'Graphics & Simulation' | 'DevOps & Utilities';
-  imagePlaceholder?: string; // For visual variety
 }
 
 export interface Experience {
@@ -34,10 +33,4 @@ export interface Education {
 export interface SkillCategory {
   name: string;
   skills: string[];
-}
-
-export interface Metric {
-  label: string;
-  value: string;
-  suffix?: string;
 }

@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { motion, Reorder, useReducedMotion } from 'framer-motion';
+import { motion, Reorder } from 'framer-motion';
 import type { LucideIcon } from 'lucide-react';
 import {
   Activity,
@@ -122,7 +122,6 @@ const SkillTile = ({ skill, category }: { skill: string; category: string }) => 
 };
 
 export const Skills = () => {
-  const reduceMotion = useReducedMotion();
   const [skillGroups, setSkillGroups] = useState(() =>
     SKILLS.map((cat) => ({ ...cat, skills: [...cat.skills] }))
   );
@@ -157,18 +156,6 @@ export const Skills = () => {
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute -top-20 left-10 h-64 w-64 rounded-full bg-accent/18 blur-[120px]" />
         <div className="absolute bottom-0 right-0 h-72 w-72 rounded-full bg-accent-2/18 blur-[120px]" />
-        <motion.div
-          initial={reduceMotion ? { x: 0 } : { x: '-20%' }}
-          animate={reduceMotion ? { x: 0 } : { x: '120%' }}
-          transition={reduceMotion ? { duration: 0 } : { duration: 7, repeat: Infinity, ease: 'linear' }}
-          className="absolute top-16 h-px w-1/3 bg-gradient-to-r from-transparent via-accent/50 to-transparent opacity-60"
-        />
-        <motion.div
-          initial={reduceMotion ? { x: 0 } : { x: '120%' }}
-          animate={reduceMotion ? { x: 0 } : { x: '-20%' }}
-          transition={reduceMotion ? { duration: 0 } : { duration: 9, repeat: Infinity, ease: 'linear' }}
-          className="absolute bottom-20 h-px w-1/2 bg-gradient-to-r from-transparent via-accent-3/40 to-transparent opacity-40"
-        />
       </div>
       <motion.div
         variants={staggerContainer}
@@ -179,23 +166,23 @@ export const Skills = () => {
       >
         <div className="mb-10 flex flex-wrap items-center gap-4">
           <motion.span variants={fadeInUp} className="font-mono text-[11px] uppercase tracking-[0.3em] text-accent">02</motion.span>
-          <motion.h2 variants={fadeInUp} className="text-3xl md:text-4xl font-display font-semibold text-text-strong">Technical Arsenal</motion.h2>
+          <motion.h2 variants={fadeInUp} className="text-3xl md:text-4xl font-display font-semibold text-text-strong">Stack</motion.h2>
           <motion.div variants={revealLine} className="h-px flex-grow bg-gradient-to-r from-line via-accent-3/40 to-line" />
         </div>
 
         <motion.div variants={fadeInUp} className="mb-10 flex flex-wrap items-center gap-4 text-[11px] font-mono uppercase tracking-[0.3em] text-text-muted">
           <span className="flex items-center gap-2">
             <Sparkles size={12} className="text-accent" />
-            {totalSkills} Skills Loaded
+            {totalSkills} tools I use
           </span>
           <span className="h-px w-8 bg-line" />
           <span className="hidden md:flex items-center gap-2">
             <Layers size={12} className="text-accent-3" />
-            Live matrix stream
+            The everyday toolkit
           </span>
           <span className="flex items-center gap-2 md:hidden">
             <GripVertical size={12} className="text-accent-3" />
-            Drag modules to reorder
+            Drag to reorder
           </span>
         </motion.div>
 
@@ -217,7 +204,7 @@ export const Skills = () => {
                 <div className="relative z-10">
                   <div className="mb-6 flex items-center justify-between">
                     <h3 className="font-mono text-[11px] uppercase tracking-[0.3em] text-accent-2">{cat.name}</h3>
-                    <span className="text-[11px] font-mono uppercase tracking-[0.3em] text-text-muted">{cat.skills.length} units</span>
+                    <span className="text-[11px] font-mono uppercase tracking-[0.3em] text-text-muted">{cat.skills.length}</span>
                   </div>
                   <Reorder.Group
                     axis="y"
@@ -262,20 +249,20 @@ export const Skills = () => {
         >
           <div className="absolute inset-0 pointer-events-none">
             <div className="absolute -top-20 left-[20%] h-56 w-56 rounded-full bg-accent/18 blur-[120px]" />
-            <div className="absolute -bottom-16 right-[10%] h-64 w-64 rounded-full bg-accent-3/16 blur-[120px]" />
+            <div className="absolute -bottom-16 right-[10%] h-64 w-64 rounded-full bg-accent-3/15 blur-[120px]" />
             <div className="absolute left-0 top-0 h-px w-full bg-gradient-to-r from-transparent via-accent/50 to-transparent opacity-60" />
           </div>
 
           <div className="relative z-10 space-y-6">
             <div className="flex flex-wrap items-center justify-between gap-4 text-[11px] font-mono uppercase tracking-[0.3em] text-text-muted">
               <span className="flex items-center gap-2 text-text-strong">
-                <span className="h-2 w-2 rounded-full bg-accent animate-pulse motion-reduce:animate-none" />
-                Skill matrix streaming
+                <span className="h-2 w-2 rounded-full bg-accent" />
+                What I work with
               </span>
               <span className="flex items-center gap-3">
-                <span>{totalSkills} modules online</span>
+                <span>{totalSkills} total</span>
                 <span className="h-px w-8 bg-line/70" />
-                <span>Hover to slow</span>
+                <span>Hover to slow down</span>
               </span>
             </div>
 

@@ -1,4 +1,4 @@
-import { Project, Experience, Education, SkillCategory, Metric } from './types';
+import { Project, Experience, Education, SkillCategory } from './types';
 
 export const SOCIALS = {
   email: "eammarpro@gmail.com",
@@ -32,11 +32,11 @@ export const EXPERIENCE: Experience[] = [
     role: "Full-Stack & Security Engineer",
     company: "Freelance / Consultant",
     period: "2025 - Present",
-    description: "Architecting secure full-stack products and hardening backend services for real-world traffic and threat models.",
+    description: "Building full-stack products for clients, with security treated as part of the job rather than an afterthought.",
     highlights: [
-      "Designed security-first APIs with strong auth, rate limiting, and audit logging.",
-      "Shipped responsive full-stack applications with observability and hardened defaults.",
-      "Consulted on vulnerability triage, hardening reviews, and incident-ready runbooks."
+      "Design and build APIs with proper auth, rate limiting, and audit logging from day one.",
+      "Ship full-stack apps with monitoring in place and sane, hardened defaults.",
+      "Help teams triage vulnerabilities and review the security of what they already run."
     ],
     tech: ["React", "TypeScript", "Node.js", "PostgreSQL", "Linux"]
   },
@@ -45,11 +45,11 @@ export const EXPERIENCE: Experience[] = [
     role: "Board Member | Recruiter | Web Player | DFIR Player",
     company: "M4SEC Team",
     period: "2024 - Present",
-    description: "Elite academic CTF team representing 1337 Coding School in Rabat (UM6P / 42 Network). Driving recruitment, competitive strategy, and hands-on participation across web security and DFIR tracks.",
+    description: "Academic CTF team representing 1337 Coding School in Rabat (UM6P / 42 Network). I sit on the board, run recruitment, and play the web security and DFIR categories.",
     highlights: [
       "Ranked #1 in Morocco for the 2025 season and #135 worldwide on CTFtime (late 2025).",
       "Placed top 10 in major CTFs, including CyberSphere CTF (1st, 2024), L3akCTF (4th, 2024), DeadSec CTF (5th, 2024), RSTCON CTF (4th, 2025), and FortID CTF (6th, 2025).",
-      "Coordinated recruiting, onboarding, and category specialization across web, DFIR, and incident response playbooks."
+      "Run recruiting and onboarding, and help newer players pick and grow into a category."
     ],
     tech: ["Web Security", "DFIR", "Incident Response", "CTF Strategy", "Linux", "Networking"]
   },
@@ -58,37 +58,37 @@ export const EXPERIENCE: Experience[] = [
     role: "Software Engineering Scholar",
     company: "1337 School (42 Network)",
     period: "2024 - Present",
-    description: "Engaged in an intensive, project-based curriculum focused on system programming, networking, and advanced algorithms.",
+    description: "Project-based curriculum with no classes and no teachers: you learn C, systems programming, and algorithms by building things and having peers tear them apart in review.",
     highlights: [
-      "Built a custom Unix shell, a 3D ray-tracing engine, and a multi-threaded web server from scratch in C.",
-      "Mastered low-level memory management and the POSIX API through peer-evaluated projects.",
-      "Collaborated in a high-pressure, zero-instruction environment to solve algorithmic puzzles."
+      "Built a Unix shell, a 3D ray tracer, and a multi-threaded server from scratch in C.",
+      "Got deeply comfortable with manual memory management and the POSIX API.",
+      "Peer-reviewed dozens of projects, which taught me to read other people's C as carefully as I write my own."
     ],
     tech: ["C", "C++", "Unix API", "Multithreading", "Algorithms"]
   },
   {
     id: "exp-3",
     role: "Navigation Systems Lead",
-    company: "Royal Navy / Maritime Sector",
+    company: "Royal Moroccan Navy",
     period: "2022 - 2024",
-    description: "Managed mission-critical navigation systems and real-time telemetry data in high-stakes environments.",
+    description: "Ran shipboard navigation systems and real-time telemetry, where a mistake isn't a bug ticket.",
     highlights: [
-      "Orchestrated complex sensor networks ensuring 99.9% operational uptime.",
-      "Led cross-functional teams to execute high-precision maneuvers in dynamic environments.",
-      "Performed real-time debugging and anomaly resolution on critical system hardware/software."
+      "Kept a network of navigation sensors running at 99.9% uptime at sea.",
+      "Led small teams through high-precision maneuvers under real pressure.",
+      "Debugged hardware and software issues live, on running systems."
     ],
     tech: ["Systems Monitoring", "Incident Response", "Real-time Telemetry", "Navigation Software"]
   },
   {
     id: "exp-4",
     role: "Technical Analyst (Intern)",
-    company: "Royal Navy / Maritime Sector",
+    company: "Royal Moroccan Navy",
     period: "2020 - 2022",
-    description: "Supported the maintenance and calibration of integrated bridge systems and data telemetry.",
+    description: "Maintained and calibrated integrated bridge systems and their telemetry.",
     highlights: [
-      "Analyzed data telemetry to optimize operational trajectories.",
-      "Collaborated on hardware-software interfacing and maintenance protocols.",
-      "Maintained exhaustive technical documentation under international regulatory standards."
+      "Analyzed telemetry data to improve operational trajectories.",
+      "Worked on the seam between hardware and software during maintenance.",
+      "Kept technical documentation current under international regulatory standards."
     ],
     tech: ["Data Analysis", "Integrated Systems", "Compliance"]
   }
@@ -105,7 +105,7 @@ export const EDUCATION: Education[] = [
   {
     id: "edu-2",
     degree: "Maritime Professional Certifications",
-    school: "Royal Navy / Maritime Training Center",
+    school: "Royal Moroccan Navy Training Center",
     year: "2020 - 2023",
     focus: "Technical specialization in naval operations and system safety.",
     certifications: [
@@ -117,7 +117,7 @@ export const EDUCATION: Education[] = [
   {
     id: "edu-3",
     degree: "Economics and Management",
-    school: "University Hassan I",
+    school: "Hassan First University",
     year: "2019 - 2021",
     focus: "Quantitative analysis, management theory, and strategic decision-making."
   },
@@ -133,9 +133,9 @@ export const PROJECTS: Project[] = [
   {
     id: "p8",
     title: "Minishell",
-    description: "A comprehensive Unix shell built in C, featuring a custom AST parser, process pipelining, and automated memory management.",
+    description: "A Unix shell written in C, with a hand-rolled AST parser, pipelines, and its own memory management.",
     role: "System Programmer",
-    impact: "Engineered a recursive descent parser and a custom garbage collector to handle complex command execution and leak-free session management.",
+    impact: "Wrote a recursive descent parser and a custom garbage collector so complex command chains run without leaking a byte.",
     tech: ["C", "Unix API", "POSIX Signals", "Process Management"],
     featured: true,
     category: "Software Engineering",
@@ -144,9 +144,9 @@ export const PROJECTS: Project[] = [
   {
     id: "p7",
     title: "Wordle Clone",
-    description: "A feature-rich Wordle implementation with daily challenges, persistent game state, and advanced letter-scoring algorithms.",
+    description: "A Wordle clone with daily puzzles, persistent game state, and proper letter-scoring logic.",
     role: "Frontend Dev",
-    impact: "Engineered a robust state machine to handle animations, virtual keyboard sync, and daily solution fetching.",
+    impact: "Built a state machine that keeps animations, the virtual keyboard, and daily puzzle fetching in sync.",
     tech: ["React", "TypeScript", "LocalStorage", "CSS3 Animations"],
     featured: true,
     category: "Web",
@@ -155,9 +155,9 @@ export const PROJECTS: Project[] = [
   {
     id: "p3",
     title: "BioGuide",
-    description: "A full-stack platform for visualizing structured biomedical data with interactive dashboards and advanced search tooling.",
+    description: "A full-stack app for exploring biomedical research data, with interactive dashboards and search.",
     role: "Full-Stack Dev",
-    impact: "Built a high-performance data engine for real-time visualization of PMC research corpora.",
+    impact: "Renders large PMC research datasets in the browser without breaking a sweat.",
     tech: ["React", "Node.js", "MongoDB", "D3.js", "Tailwind"],
     featured: true,
     category: "Web",
@@ -166,9 +166,9 @@ export const PROJECTS: Project[] = [
   {
     id: "p4",
     title: "LANG-ME",
-    description: "A modern educational hub integrating external APIs for real-time dictionary lookups, book discovery, and curated learning resources.",
+    description: "A language-learning site that brings together dictionary lookups, book discovery, and learning resources from public APIs.",
     role: "Frontend Dev",
-    impact: "Engineered a responsive, API-driven architecture using CSS Grid and modular React components.",
+    impact: "Wired external APIs into a responsive interface built from small, reusable React components.",
     tech: ["React", "Styled Components", "REST APIs", "CSS Grid"],
     featured: false,
     category: "Web",
@@ -201,7 +201,7 @@ export const PROJECTS: Project[] = [
     title: "Dining Philosophers",
     description: "A multi-threaded simulation of the classic synchronization problem, implementing deadlock prevention and thread safety in C.",
     role: "System Developer",
-    impact: "Solved the Circular Wait condition using an asymmetric resource acquisition strategy, ensuring 100% thread safety and starvation monitoring.",
+    impact: "Avoids deadlock with an asymmetric fork-pickup order, and monitors threads so nobody starves.",
     tech: ["C", "pthreads", "Mutexes", "Synchronization"],
     featured: false,
     category: "Software Engineering",
@@ -221,9 +221,9 @@ export const PROJECTS: Project[] = [
   {
     id: "p11",
     title: "React Chess Engine",
-    description: "A high-performance chess engine integrated into a React web app, featuring a Minimax search with Alpha-Beta pruning.",
+    description: "A chess engine that runs in the browser inside a React app, built on Minimax search with alpha-beta pruning.",
     role: "Full-Stack Developer",
-    impact: "Engineered a strategic engine (~1400 ELO) capable of real-time positional evaluation and draw negotiation.",
+    impact: "The engine plays at roughly 1400 ELO, evaluating positions in real time and knowing when to offer a draw.",
     tech: ["React", "TypeScript", "Minimax Algorithm", "Tailwind CSS"],
     featured: true,
     category: "Software Engineering",
@@ -232,7 +232,7 @@ export const PROJECTS: Project[] = [
   {
     id: "p12",
     title: "Fract-ol",
-    description: "A high-performance fractal rendering engine in C capable of visualizing infinite sets like Mandelbrot, Julia, and Tricorn in real-time.",
+    description: "A real-time fractal explorer in C that renders the Mandelbrot, Julia, and Tricorn sets.",
     role: "Graphics Programmer",
     impact: "Implemented smooth mouse-centered zooming and optimized escape-time algorithms to maintain high frame rates during exploration.",
     tech: ["C", "MiniLibX", "Complex Mathematics", "Computer Graphics"],
@@ -245,7 +245,7 @@ export const PROJECTS: Project[] = [
     title: "Push_Swap",
     description: "An optimized sorting algorithm that sorts data across two stacks using a restricted instruction set, achieving O(n log n) complexity.",
     role: "Algorithm Developer",
-    impact: "Engineered a chunk-based pre-sorting strategy that sorts 500 numbers in under 5500 operations (Top-tier efficiency).",
+    impact: "A chunk-based pre-sorting strategy sorts 500 numbers in under 5,500 operations.",
     tech: ["C", "Algorithms", "Data Structures", "Complexity Analysis"],
     featured: false,
     category: "Software Engineering",

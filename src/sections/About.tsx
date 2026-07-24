@@ -18,47 +18,43 @@ export const About = () => {
       >
         <div className="mb-12 flex flex-wrap items-center gap-4">
           <motion.span variants={fadeInUp} className="font-mono text-[11px] uppercase tracking-[0.3em] text-accent">01</motion.span>
-          <motion.h2 variants={fadeInUp} className="text-3xl md:text-4xl font-display font-semibold text-text-strong">Operational Profile</motion.h2>
+          <motion.h2 variants={fadeInUp} className="text-3xl md:text-4xl font-display font-semibold text-text-strong">About Me</motion.h2>
           <motion.div variants={revealLine} className="h-px flex-grow bg-gradient-to-r from-line via-accent-3/40 to-line" />
         </div>
 
         <div className="grid gap-12 lg:grid-cols-[1.1fr_0.9fr]">
           <motion.div variants={fadeInUp} className="space-y-8 text-lg text-text leading-relaxed">
             <p>
-              With 2+ years in software engineering, I build <span className="text-text-strong font-semibold">security-first full-stack products</span> and
-              <span className="text-text-strong font-semibold"> resilient backend systems</span> that ship fast without sacrificing reliability.
+              I took an unusual road into software: before writing code full time I spent four years
+              working on <span className="text-text-strong font-semibold">shipboard navigation systems</span> in
+              the maritime sector, where things simply weren&apos;t allowed to fail.
             </p>
             <p>
-              I translate real-world threat models into hardened APIs, least-privilege access, and incident-ready telemetry.
-              The goal stays the same: clear outcomes, reliable delivery, and software that scales.
+              That habit stuck. Now I&apos;m at <span className="text-text-strong font-semibold">1337 (42 Network)</span> doing
+              systems programming in C, building full-stack products on the side, and competing in CTFs
+              with M4SEC — the team ranked #1 in Morocco for the 2025 season. I like software that holds
+              up under pressure: sane auth, hardened APIs, and clear logs when something goes wrong.
             </p>
 
             <div className="grid gap-4 pt-4 sm:grid-cols-2">
               <div className="rounded-[24px] border border-white/10 bg-bg-elev-1/70 px-5 py-4 shadow-[2px_4px_16px_0px_rgba(248,248,248,0.04)_inset] backdrop-blur transition-all duration-500">
-                <h4 className="font-mono text-[11px] uppercase tracking-[0.3em] text-text-muted mb-3">Primary Focus</h4>
+                <h3 className="font-mono text-[11px] uppercase tracking-[0.3em] text-text-muted mb-3">Focus</h3>
                 <ul className="space-y-1 text-sm text-text-strong">
-                  <li>Application Security</li>
-                  <li>Full-Stack Engineering</li>
+                  <li>Application security</li>
+                  <li>Full-stack engineering</li>
                 </ul>
               </div>
               <div className="rounded-[24px] border border-white/10 bg-bg-elev-1/70 px-5 py-4 shadow-[2px_4px_16px_0px_rgba(248,248,248,0.04)_inset] backdrop-blur transition-all duration-500">
-                <h4 className="font-mono text-[11px] uppercase tracking-[0.3em] text-text-muted mb-3">Location</h4>
-                <div className="text-sm text-text-strong">Based in Morocco</div>
-                <div className="text-sm text-text-muted">Available Remote</div>
+                <h3 className="font-mono text-[11px] uppercase tracking-[0.3em] text-text-muted mb-3">Location</h3>
+                <div className="text-sm text-text-strong">Rabat, Morocco</div>
+                <div className="text-sm text-text-muted">Open to remote work</div>
               </div>
             </div>
           </motion.div>
 
           <motion.div variants={fadeInUp}>
             <div className="relative rounded-[28px] border border-white/10 bg-bg-elev-1/70 p-8 shadow-[2px_4px_16px_0px_rgba(248,248,248,0.04)_inset] backdrop-blur transition-all duration-500">
-              <div className="absolute top-0 right-0 p-3">
-                <div className="flex gap-1">
-                  <div className="h-1.5 w-1.5 rounded-full bg-text-muted" />
-                  <div className="h-1.5 w-1.5 rounded-full bg-text-muted" />
-                  <div className="h-1.5 w-1.5 rounded-full bg-text-muted" />
-                </div>
-              </div>
-              <h3 className="font-mono text-[11px] uppercase tracking-[0.3em] text-accent-2 mb-6">Education Log</h3>
+              <h3 className="font-mono text-[11px] uppercase tracking-[0.3em] text-accent-2 mb-6">Education</h3>
               <div className="space-y-8">
                 {EDUCATION.map((edu) => (
                   <div key={edu.id} className="relative pl-6 border-l border-line-strong/70">
