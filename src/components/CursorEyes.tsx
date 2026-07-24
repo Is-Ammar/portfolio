@@ -69,7 +69,7 @@ export const CursorEyes = () => {
             exit={{ opacity: 0, y: 4, scale: 0.95 }}
             className="absolute -top-10 right-0 whitespace-nowrap rounded-full border border-white/15 bg-bg-elev-2/90 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.2em] text-text-strong shadow-[0_10px_32px_rgba(0,0,0,0.45)] backdrop-blur-md"
           >
-            Just watching
+            Just watching for now , assistant is comming soon !
           </motion.div>
         )}
       </AnimatePresence>
