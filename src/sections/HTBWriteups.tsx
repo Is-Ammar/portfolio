@@ -1,8 +1,11 @@
 import React, { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { useLenis } from 'lenis/react';
+import { createPortal } from 'react-dom';
+import { AnimatePresence, m, useReducedMotion } from 'framer-motion';
+import { useSmoothScroll } from '../components/SmoothScroll';
 import { AlertTriangle, ArrowUpRight, FileText, Terminal, X } from 'lucide-react';
-import { DURATION, EASE_OUT, fadeInUp, revealLine, staggerContainer } from '../utils/motion';
+import { CONTAINER_CLASS, SECTION_CLASS, SectionHeading } from '../components/SectionHeading';
+import { SectionBlob } from '../components/SectionBlob';
+import { DURATION, EASE_OUT, fadeInUp, staggerContainer } from '../utils/motion';
 
 // The markdown + syntax highlighting bundle is heavy, so it only loads
 // once a writeup is actually opened.
@@ -23,7 +26,7 @@ class MarkdownErrorBoundary extends React.Component<
   render() {
     if (this.state.hasError) {
       return (
-        <div className="rounded-[20px] border border-accent-2/40 bg-accent-2/10 p-4 text-sm text-text-muted">
+        <div className="rounded-lg border border-accent-2/40 bg-accent-2/10 p-4 text-sm text-text-muted">
           Couldn&apos;t load the reader. Refresh the page, or use the GitHub link below.
         </div>
       );
@@ -202,7 +205,9 @@ const writeCache = (items: WriteupItem[]) => {
 
 export const HTBWriteups = () => {
   const reduceMotion = useReducedMotion();
-  const lenis = useLenis();
+  const lenis = useSmoothScroll();
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const [shouldLoad, setShouldLoad] = useState(false);
   const [writeups, setWriteups] = useState<WriteupItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -214,15 +219,27 @@ export const HTBWriteups = () => {
   const [contentError, setContentError] = useState<string | null>(null);
   const [isContentLoading, setIsContentLoading] = useState(false);
 
-  const totalCount = writeups.length;
-  const badgeCounts = useMemo(
-    () =>
-      writeups.reduce(
-        (acc, item) => ({ ...acc, [item.badge]: (acc[item.badge] ?? 0) + 1 }),
-        {} as Record<WriteupItem['badge'], number>
-      ),
-    [writeups]
-  );
+  // Only call the GitHub API once the visitor gets close to this section,
+  // so the first page load stays light on slow connections.
+  useEffect(() => {
+    const node = sectionRef.current;
+    if (!node || shouldLoad) return undefined;
+    if (!('IntersectionObserver' in window)) {
+      setShouldLoad(true);
+      return undefined;
+    }
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          setShouldLoad(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: '800px 0px' }
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [shouldLoad]);
 
   const loadWriteups = useCallback(async (signal: AbortSignal) => {
     setError(null);
@@ -297,10 +314,11 @@ export const HTBWriteups = () => {
   }, []);
 
   useEffect(() => {
+    if (!shouldLoad) return undefined;
     const controller = new AbortController();
     loadWriteups(controller.signal);
     return () => controller.abort();
-  }, [loadWriteups, refreshToken]);
+  }, [loadWriteups, refreshToken, shouldLoad]);
 
   // Clear any error left behind by a previous writeup so cached content
   // renders instead of a stale failure message.
@@ -405,34 +423,32 @@ export const HTBWriteups = () => {
 
   const activeContent = selectedWriteup ? contentMap[selectedWriteup.path] : '';
   const showLoading = isLoading && writeups.length === 0;
+  const badgeCounts = useMemo(
+    () =>
+      writeups.reduce(
+        (acc, item) => ({ ...acc, [item.badge]: (acc[item.badge] ?? 0) + 1 }),
+        {} as Record<WriteupItem['badge'], number>
+      ),
+    [writeups]
+  );
 
   return (
-    <section id="writeups" className="section-shell px-6 py-28 lg:px-12">
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute -top-20 right-[8%] h-72 w-72 rounded-full bg-accent/18 blur-[140px]" />
-        <div className="absolute bottom-0 left-[10%] h-72 w-72 rounded-full bg-accent-3/18 blur-[140px]" />
-      </div>
+    <section id="writeups" ref={sectionRef} className={SECTION_CLASS}>
+      <SectionBlob className="-top-20 right-[8%] h-80 w-80" color="rgb(99 102 241 / 0.16)" />
+      <SectionBlob className="bottom-0 left-[10%] h-80 w-80" color="rgb(34 211 238 / 0.12)" />
 
-      <motion.div
+      <m.div
         variants={staggerContainer}
         initial="initial"
         whileInView="animate"
         viewport={{ once: true, amount: 0.1 }}
-        className="relative z-10 mx-auto max-w-[1600px]"
+        className={CONTAINER_CLASS}
       >
-        <div className="mb-12 flex flex-wrap items-center gap-4">
-          <motion.span variants={fadeInUp} className="font-mono text-[11px] uppercase tracking-[0.3em] text-accent">
-            05
-          </motion.span>
-          <motion.h2 variants={fadeInUp} className="text-3xl md:text-4xl font-display font-semibold text-text-strong">
-            Writeups
-          </motion.h2>
-          <motion.div variants={revealLine} className="h-px flex-grow bg-gradient-to-r from-line via-accent-3/40 to-line" />
-        </div>
+        <SectionHeading index="05" title="Writeups" />
 
-        <motion.div variants={fadeInUp} className="mb-10 grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-          <div className="rounded-[28px] border border-white/10 bg-bg-elev-1/70 p-6 shadow-[2px_4px_16px_0px_rgba(248,248,248,0.04)_inset] backdrop-blur">
-            <div className="flex flex-wrap items-center gap-3 text-[11px] font-mono uppercase tracking-[0.3em] text-text-muted">
+        <m.div variants={fadeInUp} className="mb-10 grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+          <div className="rounded-[28px] border border-white/10 bg-bg-elev-1/80 p-6 shadow-[2px_4px_16px_0px_rgba(248,248,248,0.04)_inset]">
+            <div className="flex flex-wrap items-center gap-3 font-mono text-[11px] uppercase tracking-[0.3em] text-text-muted">
               <span className="flex items-center gap-2 text-text-strong">
                 <Terminal size={12} className="text-accent" />
                 Hack The Box & CTF notes
@@ -441,25 +457,22 @@ export const HTBWriteups = () => {
               <span>Pulled live from GitHub</span>
             </div>
             <p className="mt-6 max-w-2xl text-sm leading-relaxed text-text-muted">
-              Notes I take while working through Hack The Box machines and web challenges, synced straight
-              from my writeups repo. Click any file to read it here.
+              Notes I take while working through Hack The Box machines and web challenges, loaded from my writeups
+              repo. Click any file to read it here.
             </p>
           </div>
-          <div className="rounded-[28px] border border-white/10 bg-bg-elev-2/70 p-6 shadow-[2px_4px_16px_0px_rgba(248,248,248,0.04)_inset] backdrop-blur">
-            <div className="flex items-center justify-between text-[11px] font-mono uppercase tracking-[0.3em] text-text-muted">
+          <div className="rounded-[28px] border border-white/10 bg-bg-elev-2/80 p-6 shadow-[2px_4px_16px_0px_rgba(248,248,248,0.04)_inset]">
+            <div className="flex items-center justify-between gap-4 font-mono text-[11px] uppercase tracking-[0.3em] text-text-muted">
               <span>Repository</span>
               <span className="text-text-strong">
-                {showLoading ? 'Loading...' : isRefreshing ? 'Refreshing...' : `${totalCount} files`}
+                {showLoading ? 'Loading...' : isRefreshing ? 'Refreshing...' : `${writeups.length} files`}
               </span>
             </div>
-            <div className="mt-6 flex flex-wrap gap-2 text-[10px] font-mono uppercase tracking-[0.3em] text-text-muted">
+            <div className="mt-6 flex flex-wrap gap-2 font-mono text-[10px] uppercase tracking-[0.3em] text-text-muted">
               {(['HTB', 'Web'] as const).map((badge) => {
                 const styles = BADGE_STYLES[badge];
                 return (
-                  <span
-                    key={badge}
-                    className={`inline-flex items-center gap-2 rounded-full border px-3 py-1 ${styles.badge}`}
-                  >
+                  <span key={badge} className={`inline-flex items-center gap-2 rounded-full border px-3 py-1 ${styles.badge}`}>
                     <span className={`h-1.5 w-1.5 rounded-full ${styles.dot}`} />
                     {badge}
                     <span className="text-text-muted/70">{badgeCounts[badge] ?? 0}</span>
@@ -468,20 +481,19 @@ export const HTBWriteups = () => {
               })}
             </div>
           </div>
-        </motion.div>
+        </m.div>
 
-        {showLoading && (
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {showLoading && !error && (
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3" aria-hidden="true">
             {Array.from({ length: 6 }).map((_, index) => (
               <div
                 key={`skeleton-${index}`}
-                className="relative overflow-hidden rounded-[28px] border border-white/10 bg-bg-elev-1/60 p-6 shadow-[2px_4px_16px_0px_rgba(248,248,248,0.04)_inset] backdrop-blur"
+                className="relative overflow-hidden rounded-[28px] border border-white/10 bg-bg-elev-1/60 p-6"
               >
-                <div className="animate-pulse space-y-5">
+                <div className="animate-pulse space-y-5 motion-reduce:animate-none">
                   <div className="h-4 w-24 rounded-full bg-line/70" />
                   <div className="h-7 w-3/4 rounded-full bg-line/70" />
                   <div className="h-3 w-full rounded-full bg-line/70" />
-                  <div className="h-3 w-5/6 rounded-full bg-line/70" />
                   <div className="h-4 w-20 rounded-full bg-line/70" />
                 </div>
               </div>
@@ -489,78 +501,75 @@ export const HTBWriteups = () => {
           </div>
         )}
 
-        {!showLoading && error && writeups.length === 0 && (
-          <motion.div
-            variants={fadeInUp}
-            className="rounded-[28px] border border-accent-2/40 bg-accent-2/10 p-6 shadow-[2px_4px_16px_0px_rgba(248,248,248,0.04)_inset] backdrop-blur"
-          >
-            <div className="flex flex-wrap items-center gap-3 text-[11px] font-mono uppercase tracking-[0.3em] text-accent-2">
+        {error && writeups.length === 0 && (
+          <div className="rounded-[28px] border border-accent-2/40 bg-accent-2/10 p-6">
+            <div className="flex flex-wrap items-center gap-3 font-mono text-[11px] uppercase tracking-[0.3em] text-accent-2">
               <AlertTriangle size={14} />
               Couldn&apos;t reach GitHub
             </div>
-            <p className="mt-4 text-sm text-text-muted">
-              {error} Give it a few seconds and try again.
-            </p>
+            <p className="mt-4 text-sm text-text-muted">{error} Give it a few seconds and try again.</p>
             <button
               type="button"
               onClick={() => setRefreshToken((prev) => prev + 1)}
-              className="mt-6 inline-flex items-center gap-2 rounded-full border border-accent-2/40 bg-bg/60 px-4 py-2 text-[11px] font-mono uppercase tracking-[0.3em] text-accent-2 transition-all hover:border-accent-2/70 hover:text-accent-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/60 focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
+              className="mt-6 inline-flex items-center gap-2 rounded-full border border-accent-2/40 bg-bg/60 px-4 py-2 font-mono text-[11px] uppercase tracking-[0.3em] text-accent-2 transition-colors hover:border-accent-2/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/60"
             >
               Try again
             </button>
-          </motion.div>
+          </div>
         )}
 
         {writeups.length > 0 && (
-          <motion.div
+          <m.div
             variants={staggerContainer}
-            initial="initial"
+            initial={reduceMotion ? false : 'initial'}
             animate="animate"
             className="grid gap-6 md:grid-cols-2 lg:grid-cols-3"
           >
             {writeups.map((writeup) => {
               const styles = BADGE_STYLES[writeup.badge];
               return (
-                <motion.button
+                <m.button
                   key={writeup.path}
                   type="button"
                   variants={fadeInUp}
                   whileHover={reduceMotion ? undefined : { y: -6 }}
                   transition={{ duration: DURATION.sm, ease: EASE_OUT }}
                   onClick={() => setSelectedWriteup(writeup)}
-                  className="glow-card group relative flex h-full flex-col overflow-hidden rounded-[28px] border border-white/10 bg-bg-elev-1/70 p-6 text-left shadow-[2px_4px_16px_0px_rgba(248,248,248,0.04)_inset] backdrop-blur transition-all duration-500 hover:border-accent/30"
+                  className="glow-card group relative flex h-full min-w-0 flex-col overflow-hidden rounded-[28px] border border-white/10 bg-bg-elev-1/80 p-6 text-left shadow-[2px_4px_16px_0px_rgba(248,248,248,0.04)_inset] transition-colors duration-500 hover:border-accent/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/60"
                   aria-label={`Open writeup ${writeup.title}`}
                 >
                   <div className="absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
-                    <div className="absolute -inset-12 bg-[radial-gradient(circle_at_20%_20%,color-mix(in_srgb,var(--accent)_22%,transparent),transparent_60%)]" />
+                    <div className="absolute -inset-12 bg-[radial-gradient(circle_at_20%_20%,rgb(99_102_241/0.22),transparent_60%)]" />
                   </div>
 
                   <div className="relative z-10 flex h-full flex-col">
                     <div className="flex items-center justify-between gap-4">
                       <span
-                        className={`inline-flex items-center gap-2 rounded-full border px-3 py-1 text-[10px] font-mono uppercase tracking-[0.3em] ${styles.badge}`}
+                        className={`inline-flex items-center gap-2 rounded-full border px-3 py-1 font-mono text-[10px] uppercase tracking-[0.3em] ${styles.badge}`}
                       >
                         <span className={`h-1.5 w-1.5 rounded-full ${styles.dot}`} />
                         {writeup.badge}
                       </span>
-                      <span className="text-[10px] font-mono uppercase tracking-[0.3em] text-text-muted">
-                        {writeup.category}
-                      </span>
+                      {writeup.category !== writeup.badge && (
+                        <span className="truncate font-mono text-[10px] uppercase tracking-[0.3em] text-text-muted">
+                          {writeup.category}
+                        </span>
+                      )}
                     </div>
 
                     <div className="mt-5">
                       <h3 className="text-xl font-semibold text-text-strong transition-colors group-hover:text-accent">
                         {writeup.title}
                       </h3>
-                      <div className="mt-3 flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.3em] text-text-muted">
-                        <FileText size={12} className="text-accent/70" />
+                      <div className="mt-3 flex min-w-0 items-center gap-2 font-mono text-[11px] text-text-muted">
+                        <FileText size={12} className="shrink-0 text-accent/70" />
                         <span className="truncate" title={writeup.path}>
                           {writeup.path}
                         </span>
                       </div>
                     </div>
 
-                    <div className="mt-auto flex items-center justify-between gap-4 border-t border-line/60 pt-4 text-[10px] font-mono uppercase tracking-[0.3em] text-text-muted">
+                    <div className="mt-auto flex items-center justify-between gap-4 border-t border-line/60 pt-4 font-mono text-[10px] uppercase tracking-[0.3em] text-text-muted">
                       <span className="flex items-center gap-2">
                         <span className="h-1.5 w-1.5 rounded-full bg-accent" />
                         Read writeup
@@ -568,106 +577,102 @@ export const HTBWriteups = () => {
                       <span>{formatSize(writeup.size)}</span>
                     </div>
                   </div>
-                </motion.button>
+                </m.button>
               );
             })}
-          </motion.div>
+          </m.div>
         )}
-      </motion.div>
+      </m.div>
 
-      <AnimatePresence>
-        {selectedWriteup && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[80] flex items-center justify-center bg-bg/90 backdrop-blur-xl p-4 md:p-10"
-            onClick={() => setSelectedWriteup(null)}
-          >
-            <motion.div
-              ref={dialogRef}
-              tabIndex={-1}
-              initial={{ opacity: 0, y: 20, scale: 0.98 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 10, scale: 0.98 }}
-              transition={{ duration: DURATION.sm, ease: EASE_OUT }}
-              className="relative w-full max-w-4xl overflow-hidden rounded-[28px] border border-white/10 bg-bg-elev-2/95 shadow-[0_24px_70px_rgba(0,0,0,0.6)] backdrop-blur focus:outline-none"
-              onClick={(event) => event.stopPropagation()}
-              role="dialog"
-              aria-modal="true"
-              aria-label={`${selectedWriteup.title} writeup`}
-              data-lenis-prevent
+      {createPortal(
+        <AnimatePresence>
+          {selectedWriteup && (
+            <m.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-[80] flex items-center justify-center bg-bg/90 p-3 sm:p-4 md:p-10"
+              onClick={() => setSelectedWriteup(null)}
             >
-              <div className="flex max-h-[85vh] flex-col">
-                <div className="sticky top-0 z-10 flex items-center justify-between gap-4 border-b border-line/60 bg-bg/80 px-6 py-4 backdrop-blur">
-                  <div>
-                    <div className="text-[10px] font-mono uppercase tracking-[0.3em] text-text-muted">
-                      Writeup
+              <m.div
+                ref={dialogRef}
+                tabIndex={-1}
+                initial={{ opacity: 0, y: 20, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 10, scale: 0.98 }}
+                transition={{ duration: DURATION.sm, ease: EASE_OUT }}
+                className="relative w-full max-w-4xl overflow-hidden rounded-[28px] border border-white/10 bg-bg-elev-2 shadow-[0_24px_70px_rgba(0,0,0,0.6)] focus:outline-none"
+                onClick={(event) => event.stopPropagation()}
+                role="dialog"
+                aria-modal="true"
+                aria-label={`${selectedWriteup.title} writeup`}
+                data-lenis-prevent
+              >
+                <div className="flex max-h-[85vh] flex-col">
+                  <div className="flex items-center justify-between gap-4 border-b border-line/60 bg-bg-elev-2 px-5 py-4 sm:px-6">
+                    <div className="min-w-0">
+                      <div className="font-mono text-[10px] uppercase tracking-[0.3em] text-text-muted">Writeup</div>
+                      <h3 className="truncate text-xl font-semibold text-text-strong">{selectedWriteup.title}</h3>
                     </div>
-                    <h3 className="text-xl font-semibold text-text-strong">
-                      {selectedWriteup.title}
-                    </h3>
+                    <button
+                      type="button"
+                      onClick={() => setSelectedWriteup(null)}
+                      className="shrink-0 rounded-full border border-white/10 bg-bg/70 p-2 text-text-muted transition-colors hover:border-accent/40 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/60"
+                      aria-label="Close writeup"
+                    >
+                      <X size={16} />
+                    </button>
                   </div>
-                  <button
-                    type="button"
-                    onClick={() => setSelectedWriteup(null)}
-                    className="rounded-full border border-white/10 bg-bg/70 p-2 text-text-muted transition-colors hover:border-accent/40 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/60 focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
-                    aria-label="Close writeup"
-                  >
-                    <X size={16} />
-                  </button>
+
+                  <div className="no-scrollbar flex-1 overflow-y-auto overscroll-contain px-5 pb-8 pt-6 sm:px-6" data-lenis-prevent>
+                    {isContentLoading && (
+                      <div className="animate-pulse space-y-4 motion-reduce:animate-none">
+                        {Array.from({ length: 6 }).map((_, index) => (
+                          <div key={`content-skeleton-${index}`} className="h-4 w-full rounded-full bg-line/70" />
+                        ))}
+                      </div>
+                    )}
+
+                    {!isContentLoading && contentError && (
+                      <div className="rounded-[20px] border border-accent-2/40 bg-accent-2/10 p-4 text-sm text-text-muted">
+                        {contentError}
+                      </div>
+                    )}
+
+                    {!isContentLoading && !contentError && (
+                      <MarkdownErrorBoundary>
+                        <Suspense
+                          fallback={
+                            <div className="animate-pulse space-y-4 motion-reduce:animate-none">
+                              {Array.from({ length: 6 }).map((_, index) => (
+                                <div key={`md-skeleton-${index}`} className="h-4 w-full rounded-full bg-line/70" />
+                              ))}
+                            </div>
+                          }
+                        >
+                          <WriteupMarkdown content={activeContent ?? ''} />
+                        </Suspense>
+                      </MarkdownErrorBoundary>
+                    )}
+                  </div>
+
+                  <div className="border-t border-line/60 bg-bg-elev-2 px-5 py-4 sm:px-6">
+                    <a
+                      href={selectedWriteup.htmlUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-2 rounded-full border border-line-strong/70 bg-bg-elev-1/80 px-4 py-2 font-mono text-[11px] uppercase tracking-[0.3em] text-text-strong transition-colors hover:border-accent/60 hover:text-accent hover:shadow-glow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/60"
+                    >
+                      View on GitHub <ArrowUpRight size={14} />
+                    </a>
+                  </div>
                 </div>
-
-                <div
-                  className="flex-1 overflow-y-auto overscroll-contain px-6 pb-8 pt-6 no-scrollbar"
-                  data-lenis-prevent
-                >
-                  {isContentLoading && (
-                    <div className="space-y-4 animate-pulse">
-                      {Array.from({ length: 6 }).map((_, index) => (
-                        <div key={`content-skeleton-${index}`} className="h-4 w-full rounded-full bg-line/70" />
-                      ))}
-                    </div>
-                  )}
-
-                  {!isContentLoading && contentError && (
-                    <div className="rounded-[20px] border border-accent-2/40 bg-accent-2/10 p-4 text-sm text-text-muted">
-                      {contentError}
-                    </div>
-                  )}
-
-                  {!isContentLoading && !contentError && (
-                    <MarkdownErrorBoundary>
-                      <Suspense
-                        fallback={
-                          <div className="space-y-4 animate-pulse">
-                            {Array.from({ length: 6 }).map((_, index) => (
-                              <div key={`md-skeleton-${index}`} className="h-4 w-full rounded-full bg-line/70" />
-                            ))}
-                          </div>
-                        }
-                      >
-                        <WriteupMarkdown content={activeContent ?? ''} />
-                      </Suspense>
-                    </MarkdownErrorBoundary>
-                  )}
-                </div>
-
-                <div className="sticky bottom-0 border-t border-line/60 bg-bg/80 px-6 py-4 backdrop-blur">
-                  <a
-                    href={selectedWriteup.rawUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-2 rounded-full border border-line-strong/70 bg-bg-elev-1/80 px-4 py-2 text-[11px] font-mono uppercase tracking-[0.3em] text-text-strong transition-all hover:border-accent/60 hover:text-accent hover:shadow-glow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus/60 focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
-                  >
-                    View on GitHub <ArrowUpRight size={14} />
-                  </a>
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+              </m.div>
+            </m.div>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
     </section>
   );
 };

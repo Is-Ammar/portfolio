@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Ismail Ammar - Resume</title>
+<!--
+  Source for public/resume.pdf.
+  To export: open this file in Chrome, Print, destination "Save as PDF",
+  paper A4, margins "None", background graphics on.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  @page { size: A4; margin: 10mm 13mm 9mm; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body {
+    font-family: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif;
+    font-size: 9.2pt;
+    line-height: 1.4;
+    color: #1d1f24;
+    background: #fff;
+  }
+  .page { width: 100%; }
+  .entry-head .entry-title { min-width: 0; }
+  .break { break-before: page; margin-top: 0; }
+  a { color: inherit; text-decoration: none; }
+  .mono { font-family: 'IBM Plex Mono', Menlo, monospace; }
+
+  header { display: flex; justify-content: space-between; align-items: flex-end; gap: 8mm; padding-bottom: 3mm; border-bottom: 1.4pt solid #1d1f24; }
+  h1 { font-size: 21pt; font-weight: 700; letter-spacing: 0; line-height: 1; }
+  .title { margin-top: 1.6mm; font-size: 10.5pt; font-weight: 500; color: #3d4ad9; }
+  .contact { text-align: right; font-size: 8pt; line-height: 1.55; color: #3a3d45; }
+
+  .profile { margin-top: 3mm; font-size: 9.1pt; color: #2a2d33; }
+
+  h2 {
+    margin-top: 4mm; margin-bottom: 1.8mm; padding-bottom: 0.8mm;
+    font-size: 8.8pt; font-weight: 600; letter-spacing: 0.02em; text-transform: uppercase;
+    color: #3d4ad9; border-bottom: 0.6pt solid #d4d7de;
+  }
+
+  .entry { margin-bottom: 2.4mm; break-inside: avoid; }
+  .entry-head { display: flex; justify-content: space-between; align-items: baseline; gap: 4mm; }
+  .entry-title { font-weight: 600; font-size: 9.4pt; color: #111318; }
+  .entry-title .sub { font-weight: 400; color: #4b4f58; }
+  .entry-meta { flex-shrink: 0; font-size: 7.9pt; color: #5b606b; }
+  .entry-line { margin-top: 0.3mm; }
+  .entry-head a.entry-meta { font-family: 'IBM Plex Mono', Menlo, monospace; font-size: 7.4pt; }
+  .stack { margin-top: 0.4mm; font-family: 'IBM Plex Mono', Menlo, monospace; font-size: 7.4pt; color: #3d4ad9; }
+  .desc { margin-top: 0.5mm; color: #2a2d33; }
+  .two-col .entry-head { margin-bottom: 0.8mm; }
+  ul { margin-top: 0.8mm; padding-left: 3.6mm; }
+  li { margin-bottom: 0.45mm; }
+  li::marker { color: #8a8f99; }
+
+  .skills { display: grid; grid-template-columns: 30mm 1fr; row-gap: 1mm; column-gap: 3mm; }
+  .skills dt { font-weight: 600; color: #111318; }
+  .skills dd { color: #2a2d33; }
+
+  .two-col { display: grid; grid-template-columns: 1.6fr 1fr; column-gap: 8mm; }
+  .small { font-size: 8.2pt; color: #3a3d45; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <div>
+      <h1>ISMAIL AMMAR</h1>
+      <div class="title">AI Engineering Student</div>
+    </div>
+    <div class="contact">
+      Rabat, Morocco &middot; +212 691 260 468<br />
+      <a href="mailto:eammarpro@gmail.com">eammarpro@gmail.com</a> &middot; <a href="https://is-ammar.me">is-ammar.me</a><br />
+      <a href="https://github.com/Is-Ammar">github.com/Is-Ammar</a> &middot; <a href="https://linkedin.com/in/is-ammar">linkedin.com/in/is-ammar</a>
+    </div>
+  </header>
+
+  <p class="profile">
+    AI engineering student at 1337 (42 Network), focused on AI microservices and RAG / vector search pipelines in Python,
+    and on low-level C and C++ software for Linux. Background in web security: board member and web/DFIR player on M4SEC,
+    the CTF team ranked #1 in Morocco for the 2025 season.
+  </p>
+
+  <h2>Skills</h2>
+  <dl class="skills">
+    <dt>AI &amp; Backend</dt>
+    <dd>Python, FastAPI, Pydantic, SQLAlchemy, PostgreSQL, pgvector, RAG / vector search, Ollama (local LLMs), scikit-learn</dd>
+    <dt>Systems &amp; DevOps</dt>
+    <dd>C, C++98, Linux, POSIX sockets, poll(), pthreads, Docker, Docker Compose, Nginx, Make, Git</dd>
+    <dt>Security</dt>
+    <dd>Web security, bug bounty / CTF, DFIR, network protocols (TCP, IRC)</dd>
+    <dt>Web</dt>
+    <dd>TypeScript, React, Node.js, Express, MongoDB, Tailwind CSS</dd>
+  </dl>
+
+  <h2>Projects</h2>
+
+  <div class="entry">
+    <div class="entry-head">
+      <span class="entry-title">ft_transcendence <span class="sub">| AI service, 1337 team project, in progress</span></span>
+      <a class="entry-meta" href="https://github.com/yel-alja/FT_TRANSCENDENCE">github.com/yel-alja/FT_TRANSCENDENCE</a>
+    </div>
+    <p class="desc">Bug bounty platform with an AI service that flags duplicate reports and suggests triage and severity using local LLMs.</p>
+    <div class="stack">Python · FastAPI · PostgreSQL · pgvector · Ollama · Docker</div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-head">
+      <span class="entry-title">BioGuide <span class="sub">| NASA Space Apps Challenge 2025, team project</span></span>
+      <a class="entry-meta" href="https://github.com/Is-Ammar/BioGuide">github.com/Is-Ammar/BioGuide</a>
+    </div>
+    <p class="desc">Web app for exploring NASA space biology research, with publication search, data dashboards and an AI chat assistant.</p>
+    <div class="stack">React · TypeScript · Node.js · Express · MongoDB</div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-head">
+      <span class="entry-title">NavGuard <span class="sub">| personal project</span></span>
+      <a class="entry-meta" href="https://github.com/Is-Ammar/navguard">github.com/Is-Ammar/navguard</a>
+    </div>
+    <p class="desc">Anomaly detection for ship networks that watches GPS, AIS and engine control traffic to spot spoofing and tampering.</p>
+    <div class="stack">Python · scikit-learn · PyTorch · Docker</div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-head">
+      <span class="entry-title">ft_irc <span class="sub">| 1337 team project</span></span>
+      <a class="entry-meta" href="https://github.com/Is-Ammar/ft_irc">github.com/Is-Ammar/ft_irc</a>
+    </div>
+    <p class="desc">IRC server that serves many clients from a single thread with non-blocking sockets and poll().</p>
+    <div class="stack">C++98 · Sockets · poll() · TCP</div>
+  </div>
+
+  <div class="entry">
+    <div class="entry-head">
+      <span class="entry-title">Minishell <span class="sub">| C</span></span>
+      <a class="entry-meta" href="https://github.com/Is-Ammar/MINI-SHELL">github.com/Is-Ammar/MINI-SHELL</a>
+    </div>
+    <p class="desc">Bash-like shell with pipes, redirections, heredocs and subshells.</p>
+  </div>
+
+  <div class="entry">
+    <div class="entry-head">
+      <span class="entry-title">Inception <span class="sub">| Docker</span></span>
+      <a class="entry-meta" href="https://github.com/Is-Ammar/inception">github.com/Is-Ammar/inception</a>
+    </div>
+    <p class="desc">WordPress, Nginx and MariaDB in Docker Compose, with every image built from scratch.</p>
+  </div>
+
+  <p class="small"><strong>Other:</strong> miniRT (ray tracer in C), Philosophers (threads and mutexes), push_swap, Minitalk,
+    Cloud Wishes (CTF web challenge).</p>
+
+  <h2>Experience</h2>
+
+  <div class="entry">
+    <div class="entry-head">
+      <span class="entry-title">Software Engineering Student <span class="sub">| 1337 School (42 Network), Rabat</span></span>
+      <span class="entry-meta">2024 - Present</span>
+    </div>
+    <p class="desc">Project-based, peer-reviewed school: C, C++, Unix system programming, networking and Docker.</p>
+  </div>
+
+  <div class="entry">
+    <div class="entry-head">
+      <span class="entry-title">Board Member, Recruiter, Web &amp; DFIR Player <span class="sub">| M4SEC CTF Team</span></span>
+      <span class="entry-meta">2024 - Present</span>
+    </div>
+    <p class="desc">Team ranked #1 in Morocco for the 2025 season and #135 worldwide on CTFtime. Top 10 at CyberSphere (1st), L3akCTF (4th), DeadSec (5th), RSTCON (4th) and FortID (6th).</p>
+  </div>
+
+  <div class="entry">
+    <div class="entry-head">
+      <span class="entry-title">Freelance Developer <span class="sub">| Web &amp; Security</span></span>
+      <span class="entry-meta">2025 - Present</span>
+    </div>
+    <p class="desc">Web apps and APIs for clients (React, TypeScript, Node.js, PostgreSQL), plus security reviews of their existing apps.</p>
+  </div>
+
+  <div class="entry">
+    <div class="entry-head">
+      <span class="entry-title">Navigation Systems Lead <span class="sub">| Royal Moroccan Navy</span></span>
+      <span class="entry-meta">2022 - 2024</span>
+    </div>
+    <p class="desc">Ran shipboard navigation systems and telemetry, kept the sensor network at 99.9% uptime at sea, and led small teams.</p>
+  </div>
+
+  <div class="entry">
+    <div class="entry-head">
+      <span class="entry-title">Technical Analyst (Intern) <span class="sub">| Royal Moroccan Navy</span></span>
+      <span class="entry-meta">2020 - 2022</span>
+    </div>
+    <p class="desc">Maintained and calibrated integrated bridge systems, and kept documentation in line with maritime regulations.</p>
+  </div>
+
+  <div class="two-col">
+    <div>
+      <h2>Education</h2>
+      <div class="entry-head small"><span><strong>1337 School (42 Network)</strong>, Software Engineering</span><span class="entry-meta">2024 - Present</span></div>
+      <div class="entry-head small"><span><strong>Hassan First University</strong>, Economics and Management</span><span class="entry-meta">2019 - 2021</span></div>
+      <div class="entry-head small"><span><strong>Royal Moroccan Navy Training Center</strong>, maritime certifications</span><span class="entry-meta">2020 - 2023</span></div>
+    </div>
+    <div>
+      <h2>Languages</h2>
+      <p class="small">Arabic, English, French</p>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

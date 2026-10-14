@@ -16,7 +16,7 @@ export const Footer = () => {
   }, []);
 
   return (
-    <footer className="border-t border-line/70 bg-bg-elev-1/90 px-6 py-8">
+    <footer className="relative z-10 border-t border-line/70 bg-bg-elev-1/90 px-6 py-8">
       <div className="mx-auto max-w-[1600px]">
         <div className="flex flex-col items-center justify-between gap-4 text-[11px] font-mono uppercase tracking-[0.3em] text-text-muted md:flex-row">
           <div className="flex items-center gap-4">

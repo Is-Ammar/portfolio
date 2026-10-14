@@ -2,6 +2,30 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Self-hosted fonts (latin subset, SIL Open Font License). Serving them from
+   the same origin skips two extra connections to Google on first load. */
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/space-grotesk-600.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'IBM Plex Sans';
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url('/fonts/plex-sans.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/plex-mono-400.woff2') format('woff2');
+}
+
 :root {
   color-scheme: dark;
   --bg: #030303;
@@ -14,8 +38,6 @@
   --accent: #6366f1;
   --accent-2: #f43f5e;
   --accent-3: #22d3ee;
-  --success: #22d3ee;
-  --error: #fb7185;
   --line: #1f2330;
   --line-strong: #2b3040;
   --focus: #a5b4fc;
@@ -35,23 +57,33 @@
   --line-strong-rgb: 43 48 64;
   --focus-rgb: 165 180 252;
   --shadow: 0 22px 60px rgba(0, 0, 0, 0.6);
-  --glow: 0 0 28px color-mix(in srgb, var(--accent) 50%, transparent);
-  --glow-x: 50;
-  --glow-y: 50;
-  --glow-xp: 0.5;
-  --glow-yp: 0.5;
+  --glow: 0 0 28px rgb(99 102 241 / 0.5);
+}
+
+html {
+  /* framer-motion's useScroll measures section offsets against the root */
+  position: relative;
+}
+
+/* Native smooth scrolling for in-page links when Lenis isn't running
+   (touch devices). Lenis adds the .lenis class and handles anchors itself. */
+@media (prefers-reduced-motion: no-preference) {
+  html:not(.lenis) {
+    scroll-behavior: smooth;
+  }
 }
 
 body {
   background-color: var(--bg);
   color: var(--text);
-  font-family: 'IBM Plex Sans', sans-serif;
+  font-family: 'IBM Plex Sans', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
+  overflow-x: clip;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Space Grotesk', system-ui, sans-serif;
   color: var(--text-strong);
 }
 
@@ -74,7 +106,6 @@ h1, h2, h3, h4, h5, h6 {
   background: var(--text-muted);
 }
 
-/* Hide scrollbars but keep scroll */
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -86,68 +117,167 @@ h1, h2, h3, h4, h5, h6 {
 .section-shell {
   position: relative;
   overflow: hidden;
+  /* clip instead of hidden where supported, so position: sticky inside a
+     section (the experience timeline) still sticks to the viewport */
+  overflow: clip;
   isolation: isolate;
 }
 
-/* Card border glow that follows the pointer (position fed via --glow-x/--glow-y) */
+/* Frosted glass only where it is cheap enough: desktop browsers with a
+   mouse. Phones get the same color without the blur. */
+.glass {
+  background-color: rgb(var(--bg-rgb) / 0.92);
+}
+.glass-panel {
+  background-color: rgb(var(--bg-elev-2-rgb) / 0.95);
+}
+@media (hover: hover) and (pointer: fine) {
+  .glass {
+    background-color: rgb(var(--bg-rgb) / 0.7);
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+  }
+  .glass-panel {
+    background-color: rgb(255 255 255 / 0.06);
+    -webkit-backdrop-filter: blur(20px) saturate(1.4);
+    backdrop-filter: blur(20px) saturate(1.4);
+  }
+}
+
+/* Border glow that follows the pointer. --glow-x / --glow-y are set on the
+   hovered card only (see useGlowPointer), so a pointer move restyles one
+   element instead of the whole page. */
 .glow-card {
   position: relative;
   isolation: isolate;
-  --glow-base: 235;
-  --glow-spread: 120;
-  --glow-border-size: 2px;
-  --glow-spot-size: 320px;
-  --glow-border-opacity: 0.5;
-  --glow-border-spot-opacity: 0.95;
-  --glow-border-light-opacity: 0.55;
+  --glow-x: 50%;
+  --glow-y: 0%;
 }
-
 .glow-card::before {
   content: "";
   position: absolute;
   inset: 0;
-  padding: var(--glow-border-size);
+  z-index: 1;
+  padding: 1px;
   border-radius: inherit;
   pointer-events: none;
-  box-sizing: border-box;
-  background-image:
-    radial-gradient(
-      var(--glow-spot-size) var(--glow-spot-size) at
-      calc(var(--glow-x) * 1px)
-      calc(var(--glow-y) * 1px),
-      hsl(
-        calc(var(--glow-base) + (var(--glow-xp, 0.5) * var(--glow-spread)))
-        90%
-        70%
-        / var(--glow-border-spot-opacity)
-      ),
-      transparent 70%
-    ),
-    radial-gradient(
-      calc(var(--glow-spot-size) * 0.55) calc(var(--glow-spot-size) * 0.55) at
-      calc(var(--glow-x) * 1px)
-      calc(var(--glow-y) * 1px),
-      hsl(0 0% 100% / var(--glow-border-light-opacity)),
-      transparent 75%
-    );
-  opacity: var(--glow-border-opacity);
-  -webkit-mask:
-    linear-gradient(#000 0 0) content-box,
-    linear-gradient(#000 0 0);
+  background: radial-gradient(
+    280px circle at var(--glow-x) var(--glow-y),
+    rgb(var(--accent-rgb) / 0.95),
+    rgb(var(--accent-3-rgb) / 0.4) 40%,
+    transparent 70%
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.glow-card:hover::before,
+.glow-card:focus-within::before {
+  opacity: 1;
 }
 
-.glow-card--soft {
-  --glow-border-size: 1px;
-  --glow-spot-size: 160px;
-  --glow-border-opacity: 0.55;
-  --glow-border-light-opacity: 0.4;
+/* Keyframes. Everything below animates transform or opacity only, so it runs
+   on the compositor without touching layout. */
+@keyframes float-y {
+  50% { transform: translateY(-4px); }
+}
+@keyframes twinkle {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 0.8; }
+}
+@keyframes blink {
+  0%, 94%, 100% { transform: scaleY(1); }
+  97% { transform: scaleY(0.15); }
+}
+@keyframes marquee {
+  to { transform: translateX(calc(-50% - var(--marquee-gap, 22px) / 2)); }
+}
+@keyframes backdrop-in {
+  from { opacity: 0; transform: rotate(calc(var(--r, 0deg) - 8deg)) scale(0.98); }
+  to { opacity: 1; transform: rotate(var(--r, 0deg)) scale(1); }
+}
+@keyframes backdrop-float {
+  50% { transform: translateY(18px); }
+}
+@keyframes backdrop-drift {
+  to { transform: translateY(var(--drift, 0px)); }
+}
+@keyframes backdrop-fade {
+  to { opacity: 0.75; }
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+}
+@keyframes dialog-in {
+  from { opacity: 0; transform: translateY(12px) scale(0.98); }
 }
 
-@media (pointer: coarse) {
-  .glow-card {
-    --glow-border-opacity: 0.5;
-    --glow-spot-size: 180px;
+.anim-float {
+  animation: float-y 3.2s ease-in-out infinite;
+}
+.anim-twinkle {
+  animation: twinkle 4.8s ease-in-out infinite;
+}
+.anim-blink {
+  animation: blink 5s ease-in-out infinite;
+  transform-origin: center;
+}
+
+/* Pause decorative loops while their container is off screen. */
+[data-paused='true'] .anim-float,
+[data-paused='true'] .anim-twinkle,
+[data-paused='true'] .marquee-track {
+  animation-play-state: paused;
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  gap: var(--marquee-gap, 22px);
+  animation: marquee var(--marquee-duration, 40s) linear infinite;
+}
+.marquee-track[data-reverse='true'] {
+  animation-direction: reverse;
+}
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+.backdrop-in {
+  animation: backdrop-in 3.6s cubic-bezier(0.22, 0.8, 0.35, 1) both;
+}
+.backdrop-float {
+  animation: backdrop-float 16s ease-in-out infinite;
+}
+
+/* Background shapes drift with the page using a CSS scroll timeline, which
+   runs off the main thread. Browsers without support keep them still. */
+@supports (animation-timeline: scroll()) {
+  .backdrop-drift {
+    animation: backdrop-drift linear both;
+    animation-timeline: scroll(root);
+  }
+  .backdrop-fade {
+    animation: backdrop-fade linear both;
+    animation-timeline: scroll(root);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+  .marquee-track,
+  .anim-float,
+  .anim-twinkle,
+  .anim-blink,
+  .backdrop-float {
+    animation: none !important;
   }
 }

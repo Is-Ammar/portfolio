@@ -1,14 +1,20 @@
+export type ProjectCategory = 'ai' | 'systems' | 'security' | 'web';
+
+export interface ProjectLink {
+  label: string;
+  href: string;
+}
+
 export interface Project {
   id: string;
   title: string;
+  context?: string;
+  status?: string;
+  featured?: boolean;
   description: string;
-  role: string;
-  impact: string;
   tech: string[];
-  link?: string;
-  github?: string;
-  featured: boolean;
-  category: 'Web' | 'System' | 'Infra' | 'Security' | 'Software Engineering' | 'Graphics & Simulation' | 'DevOps & Utilities';
+  categories: ProjectCategory[];
+  links: ProjectLink[];
 }
 
 export interface Experience {
