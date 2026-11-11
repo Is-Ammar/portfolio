@@ -6,9 +6,9 @@ import { NameLetters } from '../components/NameLetters';
 import { DURATION, fadeInUp, staggerContainer } from '../utils/motion';
 
 const CURRENT_PROJECT = [
-  { Icon: Database, tone: 'text-accent-3', title: 'Duplicate report detection', detail: 'Vector search with pgvector' },
-  { Icon: Cpu, tone: 'text-accent', title: 'Triage and severity suggestions', detail: 'Local LLMs with Ollama' },
-  { Icon: Server, tone: 'text-accent-2', title: 'AI service for the platform', detail: 'Python, FastAPI, Docker' },
+  { Icon: Database, tone: 'text-accent-3', title: 'Duplicate report detection', detail: 'nomic-embed-text vectors in pgvector, HNSW index' },
+  { Icon: Cpu, tone: 'text-accent', title: 'Pre-triage and severity suggestions', detail: 'llama3.2 through Ollama, CVSS 3.1 scoring' },
+  { Icon: Server, tone: 'text-accent-2', title: 'My part: the AI service', detail: 'Python, FastAPI, async SQLAlchemy, Docker' },
 ];
 
 export const Hero = () => {
@@ -38,7 +38,7 @@ export const Hero = () => {
             </span>
             <span className="hidden h-px w-10 bg-line/70 sm:block" />
             <span className="flex items-center gap-2">
-              <Terminal size={12} className="text-accent" /> AI Engineering Student
+              <Terminal size={12} className="text-accent" /> AI Engineer
             </span>
           </m.div>
 
@@ -48,14 +48,14 @@ export const Hero = () => {
 
           <m.div variants={fadeInUp} className="mt-8 max-w-2xl space-y-6 text-lg text-text md:text-xl">
             <p className="leading-relaxed">
-              I build AI services in Python with FastAPI, PostgreSQL (pgvector) and local models in Ollama, and I
-              write low-level C and C++ on Linux. Outside school I play web security and DFIR in CTFs with M4SEC.
-              Currently studying at 1337 (42 Network) in Rabat.
+              I build AI services in Python: retrieval and vector search pipelines and local LLM inference, with
+              FastAPI, PostgreSQL (pgvector) and Ollama. My background is systems-level C and C++ on Linux and
+              offensive security, where I compete in web security and DFIR with M4SEC.
             </p>
             <div className="flex flex-wrap gap-3 font-mono text-[11px] uppercase tracking-[0.2em] text-text-muted sm:tracking-[0.3em]">
-              <span className="rounded-full border border-line/70 bg-bg-elev-1/80 px-4 py-2">RAG & vector search</span>
-              <span className="rounded-full border border-line/70 bg-bg-elev-1/80 px-4 py-2">C / C++ on Linux</span>
-              <span className="rounded-full border border-line/70 bg-bg-elev-1/80 px-4 py-2">Web security</span>
+              <span className="rounded-full border border-line/70 bg-bg-elev-1/80 px-4 py-2">AI services & RAG</span>
+              <span className="rounded-full border border-line/70 bg-bg-elev-1/80 px-4 py-2">Systems C / C++</span>
+              <span className="rounded-full border border-line/70 bg-bg-elev-1/80 px-4 py-2">Offensive security</span>
             </div>
           </m.div>
 
@@ -83,7 +83,7 @@ export const Hero = () => {
             </div>
             <div className="mt-5">
               <div className="font-display text-xl font-semibold text-text-strong">ft_transcendence</div>
-              <div className="mt-1 text-sm text-text-muted">Bug bounty platform, 1337 team project</div>
+              <div className="mt-1 text-sm text-text-muted">ShieldCore, the bug bounty platform my team of five is building at 1337</div>
             </div>
             <div className="mt-5 grid gap-3 text-sm text-text">
               {CURRENT_PROJECT.map(({ Icon, tone, title, detail }) => (

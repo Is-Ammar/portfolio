@@ -5,7 +5,7 @@ import { CONTAINER_CLASS, SECTION_CLASS, SectionHeading } from '../components/Se
 import { SectionBlob } from '../components/SectionBlob';
 import { fadeInUp, staggerContainer } from '../utils/motion';
 
-const FOCUS = ['AI services and vector search', 'C / C++ systems programming', 'Web security and CTFs'];
+const FOCUS = ['AI services, RAG and vector search', 'Systems programming in C and C++', 'Offensive security and CTFs'];
 
 export const About = () => (
   <section id="about" className={SECTION_CLASS}>
@@ -22,18 +22,23 @@ export const About = () => (
       <div className="grid gap-12 lg:grid-cols-[1.1fr_0.9fr]">
         <m.div variants={fadeInUp} className="space-y-6 text-base leading-relaxed text-text md:text-lg">
           <p>
-            I came to software from the Royal Moroccan Navy, where I spent four years working on{' '}
-            <span className="font-semibold text-text-strong">shipboard navigation systems</span> and their
-            telemetry.
+            I&apos;m an AI engineer. I build the service layer around language models:{' '}
+            <span className="font-semibold text-text-strong">embeddings, vector search and local LLM inference</span>,
+            exposed as APIs in Python with FastAPI and PostgreSQL. Right now I&apos;m the product owner of
+            ShieldCore, the bug bounty platform my team of five is building at 1337, and I build its AI service: it
+            detects duplicate vulnerability reports and suggests triage and severity.
           </p>
           <p>
-            Now I&apos;m a student at <span className="font-semibold text-text-strong">1337 (42 Network)</span> in
-            Rabat. Most of my school work is C and C++ on Linux, and lately I&apos;ve been working with Python,
-            embeddings and local LLMs on a bug bounty platform with my team.
+            That work sits on a systems background. At{' '}
+            <span className="font-semibold text-text-strong">1337 (42 Network)</span> in Rabat I wrote a Unix shell,
+            a ray tracer and a multithreaded simulation in C, and an IRC server in C++98 on non-blocking sockets.
+            Before software, I spent four years in the Royal Moroccan Navy working on shipboard navigation systems
+            and their real-time telemetry.
           </p>
           <p>
-            I&apos;m also on the board of M4SEC, the CTF team ranked #1 in Morocco for the 2025 season, where I play
-            web security and DFIR. Some of my Hack The Box writeups are further down this page.
+            I also come from offensive security. I sit on the board of M4SEC, the CTF team ranked
+            #1 in Morocco for the 2025 season, where I compete in web security and DFIR, and I review application
+            security for freelance clients. Some of my Hack The Box writeups are further down this page.
           </p>
 
           <div className="grid gap-4 pt-4 sm:grid-cols-2">

@@ -32,8 +32,8 @@ export const Contact = () => (
             Get in touch
           </h3>
           <p className="mb-10 max-w-xl text-lg leading-relaxed text-text-muted">
-            Email is the fastest way to reach me and I usually reply within a day. I take freelance work, and
-            I&apos;m happy to talk about AI services, systems programming or security.
+            Email is the fastest way to reach me, and I usually reply within a day. I&apos;m available for
+            freelance work and open to discussing AI services, systems programming and security.
           </p>
           <a
             href={`mailto:${SOCIALS.email}`}

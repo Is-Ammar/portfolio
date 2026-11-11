@@ -9,6 +9,7 @@ import {
   Database,
   FileSearch,
   Flag,
+  Flame,
   GitBranch,
   Globe,
   Hammer,
@@ -37,6 +38,7 @@ export const SKILL_ICONS: Record<string, LucideIcon> = {
   pgvector: Orbit,
   'RAG / vector search': Search,
   'Ollama (local LLMs)': Cpu,
+  PyTorch: Flame,
   'scikit-learn': Sigma,
   C: Terminal,
   'C++98': Terminal,
@@ -66,7 +68,7 @@ export const SKILL_FALLBACK_ICON: LucideIcon = Bug;
 export type SkillTone = { icon: string; badge: string; label: string; glow: string };
 
 export const SKILL_TONES: Record<string, SkillTone> = {
-  'AI & Backend': {
+  'AI Engineering': {
     icon: 'text-accent-3',
     badge: 'border-accent-3/40 bg-accent-3/10',
     label: 'text-accent-3/80',
@@ -78,7 +80,7 @@ export const SKILL_TONES: Record<string, SkillTone> = {
     label: 'text-accent/80',
     glow: 'from-accent/30 via-transparent to-transparent',
   },
-  Security: {
+  'Offensive Security': {
     icon: 'text-accent-2',
     badge: 'border-accent-2/40 bg-accent-2/10',
     label: 'text-accent-2/80',
