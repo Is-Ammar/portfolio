@@ -9,7 +9,7 @@ import {
   type Card,
 } from '../src/persona/retrieval';
 
-export type Message = { role: 'system' | 'user'; content: string };
+export type Message = { role: 'system' | 'user' | 'assistant'; content: string };
 
 export type Reply = {
   answer: string;
@@ -17,6 +17,7 @@ export type Reply = {
   cards: string[];
   reasons: string[];
   rejected?: string;
+  retried?: boolean;
 };
 
 const SYSTEM_PROMPT =
@@ -26,9 +27,13 @@ const SYSTEM_PROMPT =
   'state that you do not have that information rather than guessing or hallucinating. Every question comes ' +
   'with FACTS taken from your portfolio. Answer only from those FACTS and never add a name, number, tool or ' +
   'detail that is not in them. If the question is not about you and your documented work, say that it is ' +
-  'outside the scope of this portfolio. Start with the answer itself and reply in one to three short sentences ' +
-  'of plain prose, reusing the wording of the FACTS. Do not use lists, headings or a preamble, and do not ' +
-  'mention the FACTS.';
+  'outside the scope of this portfolio. Answer the visitor directly and conversationally, in your own words, in ' +
+  'one to three short sentences. Do not copy the FACTS word for word and do not add anything that is not in ' +
+  'them. Do not use lists, headings or a preamble, and do not mention the FACTS.';
+
+const RETRY_PROMPT =
+  'Part of that answer is not in the FACTS. Answer the QUESTION again in one to three short sentences, ' +
+  'using only the FACTS and staying close to their wording.';
 
 const FALLBACK_SENTENCES = [
   "I don't have that information in my background.",
@@ -57,6 +62,7 @@ const POLICY_WORDS = `
  assistant represent directly person talking experience available detail personal
  role roles title then number numbers hello instead side apply applies
  professionally math give technology
+ through via get touch various including like such
 `;
 
 const REFUSAL_MARKERS = [
@@ -136,7 +142,7 @@ const unsupportedNames = (answer: string, cards: Card[], question: string): stri
       if (token.length < 2 || !isNameLike(token)) return;
       if (index === 0 && isPlainCapitalized(token)) return;
       const low = token.toLowerCase();
-      if (factsLow.includes(low)) return;
+      if (factsLow.includes(low) || (low.length > 3 && low.endsWith('s') && factsLow.includes(low.slice(0, -1)))) return;
       if (questionLow.includes(low) && denies) return;
       bad.add(token);
     });
@@ -152,7 +158,11 @@ const unsupportedNames = (answer: string, cards: Card[], question: string): stri
 const weakestSentence = (answer: string, cards: Card[], question: string): [number, string] => {
   const perCard = cards.map((card) => {
     const title = tokenize(card.title);
-    return sentences(card.text).map((sentence) => new Set([...title, ...tokenize(sentence)]));
+    return card.text
+      .trim()
+      .split(/(?<=[.?!])\s+/)
+      .filter(Boolean)
+      .map((sentence) => new Set([...title, ...tokenize(sentence)]));
   });
   const questionTerms = new Set(tokenize(question));
   let worst: [number, string] = [1, ''];
@@ -251,6 +261,12 @@ const ignoresBestCard = (answer: string, cards: Card[], question: string): boole
   return (support.get(best.id) ?? 0) < others;
 };
 
+const check = (draft: string, cards: Card[], question: string): [boolean, string[]] => {
+  const [ok, reasons] = verify(draft, cards, question);
+  if (ok && ignoresBestCard(draft, cards, question)) return [false, ['the answer is not built from the best-matching card']];
+  return [ok, reasons];
+};
+
 const cleanAnswer = (text: string): string =>
   text
     .replaceAll('**', '')
@@ -268,16 +284,25 @@ export const respond = async (input: string, generate: (messages: Message[]) => 
   }
   const cards = retrieve(question);
   const cardIds = cards.map((card) => card.id);
-  const draft = cleanAnswer(await generate(buildMessages(question, cards)));
-  let [ok, reasons] = verify(draft, cards, question);
-  if (ok && ignoresBestCard(draft, cards, question)) {
-    ok = false;
-    reasons = ['the answer is not built from the best-matching card'];
-  }
+  const messages = buildMessages(question, cards);
+  const draft = cleanAnswer(await generate(messages));
+  const [ok, reasons] = check(draft, cards, question);
   if (ok) return { answer: draft, source: 'model', cards: cardIds, reasons: [] };
   const namesSubject = cards.some((card) => (card.names ?? []).some((name) => mentions(question, name)));
   const weakMatch = (ranked[0]?.score ?? 0) < settings.weak_match;
-  const declined = draft.toLowerCase().includes(SCOPE_MARK) && weakMatch && !namesSubject;
-  const answer = declined ? SCOPE_REPLY : answerFromCards(question, draft);
-  return { answer, source: 'fallback', cards: cardIds, reasons, rejected: draft };
+  if (draft.toLowerCase().includes(SCOPE_MARK) && weakMatch && !namesSubject) {
+    return { answer: SCOPE_REPLY, source: 'fallback', cards: cardIds, reasons, rejected: draft };
+  }
+  const retry = cleanAnswer(
+    await generate([...messages, { role: 'assistant', content: draft }, { role: 'user', content: RETRY_PROMPT }]),
+  );
+  const [retryOk, retryReasons] = check(retry, cards, question);
+  if (retryOk) return { answer: retry, source: 'model', cards: cardIds, reasons: [], retried: true };
+  return {
+    answer: answerFromCards(question, `${draft} ${retry}`),
+    source: 'fallback',
+    cards: cardIds,
+    reasons: [...reasons, ...retryReasons],
+    rejected: draft,
+  };
 };
