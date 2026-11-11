@@ -1,9 +1,10 @@
 # dependencies
 node_modules
-persona
+/persona/
 
 # build output
 dist
+.wrangler
 
 # logs
 npm-debug.log*

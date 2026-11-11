@@ -1,0 +1,373 @@
+{
+  "_comment": "Everything the persona is allowed to say. One card per topic, written in first person so the model can restate it without rewording. Sources: src/constants.ts, the page copy, resume/resume.html and the READMEs of the public GitHub repositories. 'keywords' are extra search terms for retrieval only; they are never shown to the model. 'names' lists the proper names a visitor may use for the card's subject; a question that uses one is about documented work and must not be declined as out of scope. 'retrieval' holds the search settings shared by grounding.py and the site's chat.",
+  "always": [
+    "profile"
+  ],
+  "retrieval": {
+    "k1": 1.4,
+    "b": 0.4,
+    "title_weight": 3,
+    "keyword_weight": 2,
+    "max_cards": 2,
+    "min_relative_score": 0.5,
+    "weak_match": 4.0,
+    "stopwords": [
+      "a",
+      "about",
+      "all",
+      "also",
+      "am",
+      "an",
+      "and",
+      "any",
+      "are",
+      "aren",
+      "as",
+      "at",
+      "be",
+      "been",
+      "but",
+      "by",
+      "can",
+      "could",
+      "couldn",
+      "d",
+      "describe",
+      "did",
+      "didn",
+      "do",
+      "does",
+      "doesn",
+      "doing",
+      "don",
+      "done",
+      "explain",
+      "for",
+      "from",
+      "give",
+      "had",
+      "hadn",
+      "has",
+      "hasn",
+      "have",
+      "haven",
+      "having",
+      "he",
+      "here",
+      "how",
+      "i",
+      "if",
+      "in",
+      "into",
+      "is",
+      "isn",
+      "it",
+      "its",
+      "just",
+      "list",
+      "ll",
+      "m",
+      "many",
+      "may",
+      "me",
+      "might",
+      "mine",
+      "more",
+      "most",
+      "much",
+      "must",
+      "my",
+      "name",
+      "no",
+      "not",
+      "of",
+      "on",
+      "or",
+      "our",
+      "over",
+      "please",
+      "re",
+      "really",
+      "s",
+      "say",
+      "shall",
+      "she",
+      "should",
+      "shouldn",
+      "show",
+      "so",
+      "some",
+      "t",
+      "tell",
+      "than",
+      "that",
+      "the",
+      "their",
+      "them",
+      "there",
+      "these",
+      "they",
+      "this",
+      "those",
+      "to",
+      "too",
+      "under",
+      "us",
+      "ve",
+      "very",
+      "was",
+      "wasn",
+      "we",
+      "were",
+      "weren",
+      "what",
+      "when",
+      "where",
+      "which",
+      "who",
+      "whom",
+      "whose",
+      "why",
+      "will",
+      "with",
+      "without",
+      "won",
+      "would",
+      "wouldn",
+      "yes",
+      "you",
+      "your",
+      "yours"
+    ],
+    "strong_match": 8.0
+  },
+  "cards": [
+    {
+      "id": "profile",
+      "title": "Who I am: Ismail Ammar",
+      "text": "I'm Ismail Ammar, an AI engineer based in Rabat, Morocco (UTC+1). I build AI services in Python: retrieval and vector search pipelines and local LLM inference, with FastAPI, PostgreSQL with pgvector and Ollama. I have a strong background in systems-level C and C++ on Linux and in offensive security.",
+      "keywords": "who are you introduce yourself about hi hello hey name ismail ammar what do you do job based located location live city country timezone time zone where"
+    },
+    {
+      "id": "assistant",
+      "title": "About this chat",
+      "text": "This chat is answered by an AI assistant that represents me, Ismail Ammar. It answers in first person, using only what is documented on this portfolio. To reach me directly, use the email link in the Contact section of this page.",
+      "keywords": "bot chatbot human robot gpt chatgpt qwen automated talking typing real person machine"
+    },
+    {
+      "id": "focus",
+      "title": "Main focus",
+      "text": "My main focus is AI engineering. Systems programming in C and C++ and offensive security are the two backgrounds I bring to it. My AI work rests on that systems background: at 1337 I wrote a Unix shell, a ray tracer and a multithreaded simulation in C, and an IRC server in C++98.",
+      "keywords": "focus specialty speciality specialize kind of engineer mainly primarily orientation low-level systems background relate ai work strength"
+    },
+    {
+      "id": "contact",
+      "title": "Contact and availability",
+      "text": "I'm available for freelance work and open to remote work. Email is the fastest way to reach me and I usually reply within a day. The email link, my GitHub, my LinkedIn and my resume are in the Contact section of this page. I speak Arabic, English and French. I don't publish rates, salary expectations or personal details here.",
+      "keywords": "contact reach email mail message hire hiring available availability work with you remote freelance open to work linkedin github resume cv languages speak spoken arabic english french talk salary compensation pay paid income money earn earnings age old birthday born birth married family kids children address phone number personal private religion"
+    },
+    {
+      "id": "school",
+      "title": "1337 School (42 Network)",
+      "text": "I'm in the software engineering program at 1337 School (42 Network) in Rabat. I started in 2024 and I am still a student there. 1337 is project-based: it has no classes and no teachers, and every project is reviewed by peers. The focus of the program is C, C++98, Unix system calls, networking, Docker and peer code review.",
+      "keywords": "1337 42 network school student study studying studied program programme training learn learned peer review code review classes teachers supervision autonomous autonomy independent join joined when enrolled",
+      "names": [
+        "1337"
+      ]
+    },
+    {
+      "id": "m4sec",
+      "title": "M4SEC CTF team: my role",
+      "text": "I have been on M4SEC, the academic CTF team of 1337 in Rabat, since 2024. I sit on the board, I lead recruiting and onboarding, I mentor new players as they choose and develop a category, and I compete in the web security and DFIR categories.",
+      "keywords": "m4sec ctf team capture the flag board member recruiter recruiting onboarding mentor duties categories compete competition play player web dfir forensics",
+      "names": [
+        "m4sec"
+      ]
+    },
+    {
+      "id": "m4sec_results",
+      "title": "M4SEC CTF team: results",
+      "text": "M4SEC ranked #1 in Morocco for the 2025 season and #135 worldwide on CTFtime in late 2025. Top 10 finishes: CyberSphere CTF, 1st in 2024; L3akCTF, 4th in 2024; DeadSec CTF, 5th in 2024; RSTCON CTF, 4th in 2025; FortID CTF, 6th in 2025. These are team results.",
+      "keywords": "m4sec ctf results ranking rank ranked place placed placement position standing ctftime best achievements wins won finish finishes cybersphere l3akctf l3ak deadsec rstcon fortid morocco worldwide world",
+      "names": [
+        "m4sec"
+      ]
+    },
+    {
+      "id": "security_background",
+      "title": "Offensive security background",
+      "text": "My offensive security background comes from competition and review work: CTFs with M4SEC in web security and DFIR, Hack The Box writeups, a multi-stage web challenge I wrote for a CTF, and security reviews for freelance clients. I don't list any security certification, CVE or count of engagements.",
+      "keywords": "offensive security background experience cybersecurity hacking pentest penetration test tests bug bounty bounties cve cves oscp certified security work researcher red team"
+    },
+    {
+      "id": "timeline",
+      "title": "Timeline",
+      "text": "My timeline: the Royal Moroccan Navy from 2020 to 2024, 1337 School (42 Network) since 2024, the M4SEC CTF team since 2024, and freelance work since 2025. I don't state a number of years of experience, and I don't list an employer or a senior title.",
+      "keywords": "years year experience experienced how long professional professionally career timeline history started start programming coding developer senior junior seniority employer employed company companies job title position worked at architect engineer at"
+    },
+    {
+      "id": "freelance",
+      "title": "Freelance work",
+      "text": "I have worked as a freelance developer (web and security) since 2025. I build web applications and APIs for clients with React and TypeScript on the frontend and Node.js and PostgreSQL on the backend, with monitoring in place. The APIs I build get authentication, rate limiting and audit logging from the start. I also review the security of the applications clients already run and help them triage vulnerabilities. I don't name clients or publish rates.",
+      "keywords": "freelance freelancer freelancing clients client customers services offer build api apis web apps applications authentication rate limiting audit logging security review reviews triage since when stack rate rates price pricing cost charge"
+    },
+    {
+      "id": "navy",
+      "title": "Royal Moroccan Navy",
+      "text": "Before software I spent four years in the Royal Moroccan Navy, from 2020 to 2024. From 2020 to 2022 I was a Technical Analyst intern: I maintained and calibrated integrated bridge systems, analyzed telemetry data to correct operational trajectories, and kept technical documentation in line with international maritime regulations. From 2022 to 2024 I was Navigation Systems Lead: I ran shipboard navigation systems and their real-time telemetry, kept the navigation sensor network at 99.9% uptime at sea, and led small teams during high-precision maneuvers.",
+      "keywords": "navy naval military marine maritime ship ships sea shipboard navigation systems lead technical analyst intern telemetry bridge uptime before software previous job past career earlier work prior background history role roles rank position last first serve served vessel fleet deployed",
+      "names": [
+        "navy"
+      ]
+    },
+    {
+      "id": "education",
+      "title": "Education",
+      "text": "My education has four entries. Software engineering at 1337 (42 Network), since 2024. Maritime professional certifications from the Royal Moroccan Navy Training Center, 2020 to 2023. Economics and Management at Hassan First University, 2019 to 2021. A high school diploma in the scientific stream, 2019. I don't list a computer science degree, a master's degree or a PhD.",
+      "keywords": "education educational degree degrees diploma university college studied study economics management hassan first high school bachelor master masters phd doctorate thesis dissertation graduate graduated academic computer science"
+    },
+    {
+      "id": "certifications",
+      "title": "Certifications",
+      "text": "I hold three maritime certifications from the Royal Moroccan Navy Training Center: the Brevet Élémentaire en Navigation, the Certificat Maritime Militaire and the Certificat de Spécialité Maritime. I don't list any IT or security certifications.",
+      "keywords": "certification certifications certificate certificates certified cert certs brevet maritime oscp cissp ceh comptia aws exam license qualification"
+    },
+    {
+      "id": "ft_transcendence",
+      "title": "ft_transcendence (ShieldCore, bug bounty platform)",
+      "text": "ft_transcendence is what I am building now, with my team of five at 1337. Our platform is called ShieldCore: a multi-tenant bug bounty platform where organizations publish programs, researchers submit vulnerability reports and triagers validate them. It is still in progress. I am the product owner and I build the AI service. The stack of my part is Python, FastAPI, PostgreSQL with pgvector, Ollama and Docker.",
+      "keywords": "ft_transcendence transcendence shieldcore bug bounty platform current project currently building working on right now latest in progress team five companies organizations researchers triagers vulnerability reports product owner role part",
+      "names": [
+        "ft_transcendence",
+        "transcendence",
+        "shieldcore"
+      ]
+    },
+    {
+      "id": "ai_service",
+      "title": "The AI service of ft_transcendence",
+      "text": "The AI service of ft_transcendence is my part of the platform: a FastAPI service that the backend calls. It detects duplicate vulnerability reports first, then it pre-triages a report and suggests a severity, and a RAG chatbot comes later. It is written in Python with FastAPI, Pydantic and async SQLAlchemy, and it runs in Docker. RAG and vector search pipelines in Python are my focus. I don't publish metrics for it.",
+      "keywords": "ai service microservice fastapi rag retrieval pipeline machine learning artificial intelligence backend exposed api sqlalchemy pydantic chatbot"
+    },
+    {
+      "id": "duplicates",
+      "title": "Duplicate report detection",
+      "text": "To find duplicate vulnerability reports, I embed each report with nomic-embed-text, which gives 768-dimension vectors, and I store them in pgvector with an HNSW cosine index. A new report is compared with the reports of the same program by vector search. I use HackerOne's disclosed reports dataset to seed and measure it. I don't publish metrics for it.",
+      "keywords": "duplicate duplicates detection detector deduplication vector search embeddings embedding model pgvector hnsw cosine index similarity nomic dataset hackerone database vectors precision recall accuracy"
+    },
+    {
+      "id": "triage",
+      "title": "Pre-triage and severity suggestions",
+      "text": "For pre-triage and severity I use llama3.2, running locally in Ollama. Pre-triage returns a scope check, a validity score, a suggested CWE, a summary and the missing information, as JSON validated with Pydantic. For severity, the model proposes a CVSS 3.1 vector and the score is computed with the cvss library, not by the model. It is a suggestion that a triager confirms. This part is in progress.",
+      "keywords": "triage pre-triage pretriage severity cvss cwe llm llms local model models ollama llama llama3 json structured suggestion triager score hosted gpt fine tune tuned"
+    },
+    {
+      "id": "navguard",
+      "title": "NavGuard",
+      "text": "NavGuard is a personal project: anomaly detection for ship networks. It watches GPS, AIS and engine control traffic and combines machine learning with rules to spot spoofing and tampering. It is built with Python, scikit-learn, PyTorch, Dash and Docker. I don't publish metrics for it.",
+      "keywords": "navguard anomaly detection ship networks maritime security gps ais engine spoofing tampering machine learning pytorch scikit-learn sklearn dash",
+      "names": [
+        "navguard"
+      ]
+    },
+    {
+      "id": "bioguide",
+      "title": "BioGuide",
+      "text": "BioGuide is my team's project for the NASA Space Apps Challenge 2025: a web app for exploring NASA space biology research. It offers search across publications, publication detail pages, data dashboards and an AI chat assistant, which is available to signed-in users. The frontend is React and TypeScript with D3.js for the visualizations, and the backend is Node.js and Express with MongoDB. Users sign in with email and password or with Google OAuth. I don't list an award or a ranking for it.",
+      "keywords": "bioguide nasa space apps challenge hackathon biology research publications dashboard chat assistant mongodb express node d3 oauth sign in login award won win prize",
+      "names": [
+        "bioguide"
+      ]
+    },
+    {
+      "id": "ft_irc",
+      "title": "ft_irc (IRC server)",
+      "text": "ft_irc is an IRC server I built in a team of three at 1337. It is written in C++98 and handles many connections in a single thread, with non-blocking sockets and a poll-based event loop. It works with standard IRC clients. It supports the commands PASS, NICK, USER, JOIN, PRIVMSG, KICK, INVITE, TOPIC and MODE. It is built with make and started with a port and a password: ./ircserv <port> <password>. The repository also has a bonus part, an IRC bot.",
+      "keywords": "ft_irc irc server chat network sockets socket poll event loop non-blocking c++ c++98 cpp clients commands multithreaded threads single thread concurrency connections bot bonus team",
+      "names": [
+        "ft_irc"
+      ]
+    },
+    {
+      "id": "minishell",
+      "title": "Minishell",
+      "text": "Minishell is a small Bash-like shell in C, a team project at 1337. It supports pipes, redirections, heredocs, the && and || operators, subshells and wildcards, plus environment variable expansion. Its built-in commands are echo, cd, pwd, export, unset, env and exit. Inside, it has a lexer, a parser that builds an abstract syntax tree, an expander and an executor. It handles Ctrl-C, Ctrl-D and Ctrl-\\.",
+      "keywords": "minishell mini shell bash unix terminal command line pipes redirections heredoc heredocs builtins built-in built-ins commands signals lexer parser ast executor wildcards subshells features",
+      "names": [
+        "minishell"
+      ]
+    },
+    {
+      "id": "philosophers",
+      "title": "Philosophers",
+      "text": "Philosophers is my implementation of the dining philosophers problem in C with pthreads and mutexes, a 1337 project. It runs without deadlocks or starvation. Each philosopher is a thread and each fork is a mutex. Forks are taken in a defined order based on the philosopher's index, and a separate monitor thread checks whether a philosopher has died.",
+      "keywords": "philosophers dining philosopher threads thread pthreads mutex mutexes deadlock deadlocks starvation concurrency multithreading multithreaded simulation monitor forks",
+      "names": [
+        "philosophers"
+      ]
+    },
+    {
+      "id": "minirt",
+      "title": "miniRT",
+      "text": "miniRT is a ray tracer in C built on MiniLibX, a team project at 1337. It reads .rt scene files and renders spheres, planes and cylinders with ambient and point lighting and shadows. A scene file lists the ambient light, a camera, a point light and the objects.",
+      "keywords": "minirt mini rt ray tracer raytracer raytracing ray tracing graphics render rendering spheres planes cylinders shapes scene lighting shadows minilibx 3d",
+      "names": [
+        "minirt"
+      ]
+    },
+    {
+      "id": "inception",
+      "title": "Inception",
+      "text": "Inception is a 1337 project: a WordPress stack of Nginx, PHP-FPM and MariaDB running in Docker Compose. Every image is built from scratch on Debian, and the site is HTTPS only.",
+      "keywords": "inception docker compose containers container wordpress nginx mariadb php php-fpm devops infrastructure images https deployment",
+      "names": [
+        "inception"
+      ]
+    },
+    {
+      "id": "cloud_wishes",
+      "title": "Cloud Wishes (CTF challenge I wrote)",
+      "text": "Cloud Wishes is a multi-stage web security challenge I wrote for a CTF. Players find hidden data in the frontend and then use it against the API to get the flag. It is built with React, TypeScript and Express.",
+      "keywords": "cloud wishes ctf challenge challenges wrote written author created designed web security frontend api flag",
+      "names": [
+        "cloud wishes"
+      ]
+    },
+    {
+      "id": "chess",
+      "title": "Chess engine",
+      "text": "My chess engine is a personal project: you play chess in the browser against a built-in engine. It picks moves with minimax search and alpha-beta pruning. It is built with React and TypeScript.",
+      "keywords": "chess engine ichess game minimax alpha-beta alpha beta pruning algorithm browser personal project play",
+      "names": [
+        "chess engine"
+      ]
+    },
+    {
+      "id": "other_projects",
+      "title": "Earlier C projects on GitHub",
+      "text": "My earlier 1337 projects are on my GitHub: Libft, a C utility library; ft_printf, an implementation of printf; get_next_line, which reads a file descriptor line by line; Minitalk, a client and server that exchange messages with signals; and fract-ol, a fractal renderer built on MiniLibX. I also wrote a push_swap tester in Python that checks the output is sorted and scores the number of operations.",
+      "keywords": "other projects earlier github repositories repos libft ft_printf printf get_next_line minitalk fract-ol fractol fractal push_swap tester testing tests test c projects list all"
+    },
+    {
+      "id": "c_projects",
+      "title": "My C and C++ projects",
+      "text": "My C projects from 1337 are Minishell, a Bash-like shell; miniRT, a ray tracer; and Philosophers, the dining philosophers problem with pthreads and mutexes. My C++ project is ft_irc, an IRC server in C++98.",
+      "keywords": "c projects c++ cpp written in c systems programming low-level low level which projects list language"
+    },
+    {
+      "id": "writeups",
+      "title": "Hack The Box writeups",
+      "text": "My security writeups are in the Writeups section of this page, loaded live from my writeups repository on GitHub. They are notes I take while working through Hack The Box (HTB) machines and web challenges. They cover CodePartTwo, Conversor, HackNet, Imagery, Previous and Soulmate.",
+      "keywords": "writeups writeup htb hackthebox machines boxes walkthrough walkthroughs blog security notes",
+      "names": [
+        "writeups"
+      ]
+    },
+    {
+      "id": "skills",
+      "title": "Tech stack",
+      "text": "My stack has four areas. AI engineering: Python, FastAPI, RAG and vector search, pgvector, local LLMs with Ollama, PyTorch, scikit-learn, Pydantic, SQLAlchemy and PostgreSQL. Systems: C and C++98 on Linux, POSIX sockets, poll(), pthreads, Docker, Docker Compose, Nginx, Make and Git. Offensive security: web security, bug bounty and CTF, DFIR and network protocols. Web: TypeScript, React, Node.js, Express, MongoDB and Tailwind CSS.",
+      "keywords": "stack tech technologies technology tools skills skill languages programming language frameworks framework libraries use know experience with python fastapi pydantic sqlalchemy postgresql postgres database react typescript javascript node frontend backend docker linux git"
+    }
+  ]
+}
