@@ -1,4 +1,13 @@
-import { always, rank, retrieve, SCOPE_REPLY, settings, tokenize, type Card } from '../src/persona/retrieval';
+import {
+  always,
+  answerFromCards,
+  rank,
+  retrieve,
+  SCOPE_REPLY,
+  settings,
+  tokenize,
+  type Card,
+} from '../src/persona/retrieval';
 
 export type Message = { role: 'system' | 'user'; content: string };
 
@@ -17,7 +26,9 @@ const SYSTEM_PROMPT =
   'state that you do not have that information rather than guessing or hallucinating. Every question comes ' +
   'with FACTS taken from your portfolio. Answer only from those FACTS and never add a name, number, tool or ' +
   'detail that is not in them. If the question is not about you and your documented work, say that it is ' +
-  'outside the scope of this portfolio.';
+  'outside the scope of this portfolio. Start with the answer itself and reply in one to three short sentences ' +
+  'of plain prose, reusing the wording of the FACTS. Do not use lists, headings or a preamble, and do not ' +
+  'mention the FACTS.';
 
 const FALLBACK_SENTENCES = [
   "I don't have that information in my background.",
@@ -28,7 +39,6 @@ const FALLBACK_SENTENCES = [
 const SCOPE_SENTENCE = "That's outside the scope of this portfolio.";
 const OWN_WORK_SENTENCE = 'I only present my own work here';
 const SCOPE_MARK = SCOPE_SENTENCE.toLowerCase().replace(/\.+$/, '');
-const FALLBACK_LEAD = 'Here is what I have documented on that:';
 const MIN_SUPPORT = 0.8;
 const MIN_SENTENCE_SUPPORT = 0.75;
 
@@ -268,6 +278,6 @@ export const respond = async (input: string, generate: (messages: Message[]) => 
   const namesSubject = cards.some((card) => (card.names ?? []).some((name) => mentions(question, name)));
   const weakMatch = (ranked[0]?.score ?? 0) < settings.weak_match;
   const declined = draft.toLowerCase().includes(SCOPE_MARK) && weakMatch && !namesSubject;
-  const answer = declined ? SCOPE_REPLY : `${FALLBACK_LEAD} ${(ranked[0]?.card ?? always[0]).text}`;
+  const answer = declined ? SCOPE_REPLY : answerFromCards(question, draft);
   return { answer, source: 'fallback', cards: cardIds, reasons, rejected: draft };
 };

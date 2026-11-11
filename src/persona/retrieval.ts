@@ -113,14 +113,15 @@ const splitSentences = (text: string): string[] => {
 const MAX_SENTENCES = 3;
 const SHORT_CARD = 420;
 
-export const answerFromCards = (question: string): string => {
-  const terms = new Set(tokenize(question));
+export const answerFromCards = (question: string, hint = ''): string => {
+  const asked = tokenize(question);
   const ranked = rank(question);
-  if (terms.size > 0 && !ranked.length) return SCOPE_REPLY;
+  if (asked.length > 0 && !ranked.length) return SCOPE_REPLY;
 
   const card = ranked.length ? ranked[0].card : always[0];
   if (card.text.length <= SHORT_CARD) return card.text;
 
+  const terms = new Set([...asked, ...tokenize(hint)]);
   const sentences = splitSentences(card.text);
   const specific = sentences
     .map((sentence, index) => ({
